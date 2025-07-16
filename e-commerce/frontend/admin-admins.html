@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admins - ShoeHub Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+            <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('access_token');
+    const userName = localStorage.getItem('user_name');
+    
+    if (!token) {
+        window.location.href = 'account.html';
+        return;
+    }
+    
+    // Update admin name in header
+    const adminNameElement = document.querySelector('.admin-profile span');
+    if (adminNameElement && userName) {
+        adminNameElement.textContent = userName;
+    }
+
+    // Add logout event listeners
+    const profileLogoutButton = document.getElementById('profileLogoutButton');
+    const profileDropdownLogout = document.querySelector('#profileDropdown a[href="#logout"]');
+
+    if (profileLogoutButton) {
+        profileLogoutButton.addEventListener('click', async function(e) {
+            e.preventDefault();
+            await logoutFromServer();
+        });
+    }
+
+    if (profileDropdownLogout) {
+        profileDropdownLogout.addEventListener('click', async function(e) {
+            e.preventDefault();
+            await logoutFromServer();
+        });
+    }
+});
+
+async function logoutFromServer() {
+    try {
+        const token = localStorage.getItem('access_token');
+        const refreshToken = localStorage.getItem('refresh_token');
+
+        if (token) {
+            const response = await fetch('http://localhost:8000/api/auth/logout/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    refresh_token: refreshToken
+                })
+            });
+
+            if (!response.ok) {
+                console.error('Logout failed:', await response.text());
+            }
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+    } finally {
+        // Clear all localStorage items
+        localStorage.clear();
+        // Redirect to login page
+        window.location.href = 'account.html';
+    }
+}
+    </script>
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="sidebar-header">
+          <img src="images/logo-main.png" alt="Logo" class="logo">
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-section">
+            <h3>MAIN MENU</h3>
+            <ul>
+              <li>
+                <a href="admin.html">
+                  <i class="fas fa-th-large"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="admin-products.html">
+                  <i class="fas fa-box"></i>
+                  Products
+                  <span class="badge">+28</span>
+                </a>
+              </li>
+              <li>
+                <a href="admin-orders.html">
+                  <i class="fas fa-shopping-cart"></i>
+                  Orders
+                  <span class="badge">+28</span>
+                </a>
+              </li>
+             
+              <li class="has-submenu active" id="admin-submenu">
+                <button class="submenu-btn">
+                  <span>
+                    <i class="fas fa-users"></i>
+                    Users
+                  </span>
+                  <i class="fas fa-chevron-down submenu-toggle"></i>
+                </button>
+                <ul class="submenu">
+                  <li>
+                    <a href="admin-customers.html">
+                      <i class="fas fa-user"></i>
+                      Customers
+                    </a>
+                  </li>
+                  <li class="active">
+                    <a href="admin-admins.html">
+                      <i class="fas fa-user-shield"></i>
+                      Admins
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                               <a href="#" id="profileLogoutButton" style="display: block; padding: 12px 20px; color: #e74c3c; text-decoration: none;">Logout</a>
+
+              </li>
+            </ul>
+          </div>
+
+          <div class="nav-section">
+            <h3>APPS</h3>
+            <ul>
+              <li>
+                <a href="admin-email.html">
+                  <i class="fas fa-envelope"></i>
+                  Email
+                </a>
+              </li>
+              <li>
+                <a href="admin-chat.html">
+                  <i class="fas fa-comments"></i>
+                  Chat
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="admin-main">
+        <header class="admin-header">
+          <div class="header-left">
+            <button id="sidebar-toggle">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+              <i class="fas fa-search"></i>
+              <input type="search" placeholder="Search admins..." />
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="header-actions">
+              <button class="action-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">5</span>
+              </button>
+              <button class="action-btn">
+                <i class="fas fa-envelope"></i>
+                <span class="notification-badge">3</span>
+              </button>
+            </div>
+            <div class="admin-profile">
+              <img src="images/adminicon.png" alt="Admin Avatar" />
+              <span>Kushal Panthadas</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="admin-content">
+          <div class="content-header">
+            <h1>Admins Management</h1>
+            <button class="add-admin-btn" id="addAdminBtn" style="margin-top: 18px;">
+              <i class="fas fa-plus"></i> Add New Admin
+            </button>
+          </div>
+
+          <!-- Admins Table -->
+          <div class="admins-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Admin ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Last Login</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Admin rows will be dynamically loaded -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Add Admin Modal -->
+    <div class="product-modal" id="addAdminModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add New Admin</h2>
+          <button class="modal-close" id="closeAdminModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addAdminForm">
+            <div class="form-group">
+              <label for="adminName">Name</label>
+              <input type="text" id="adminName" name="adminName" required>
+            </div>
+            <div class="form-group">
+              <label for="adminEmail">Email</label>
+              <input type="email" id="adminEmail" name="adminEmail" required>
+            </div>
+            <div class="form-group">
+              <label for="adminPassword">Password</label>
+              <input type="password" id="adminPassword" name="adminPassword" required>
+            </div>
+            <div class="form-group">
+              <label for="adminRole">Role</label>
+              <select id="adminRole" name="adminRole" required>
+                <option value="">Select Role</option>
+                <option value="Super Admin">Super Admin</option>
+                <option value="Admin">Admin</option>
+                <option value="Manager">Manager</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="adminStatus">Status</label>
+              <select id="adminStatus" name="adminStatus" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn cancel" id="cancelAddAdmin">Cancel</button>
+          <button class="modal-btn save" id="saveAdmin">Save Admin</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Admin Modal -->
+    <div class="product-modal" id="editAdminModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Admin</h2>
+          <button class="modal-close" id="closeEditAdminModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="editAdminForm">
+            <div class="form-group">
+              <label for="editAdminName">Name</label>
+              <input type="text" id="editAdminName" name="editAdminName" required>
+            </div>
+            <div class="form-group">
+              <label for="editAdminEmail">Email</label>
+              <input type="email" id="editAdminEmail" name="editAdminEmail" required>
+            </div>
+            <div class="form-group">
+              <label for="editAdminPassword">Password</label>
+              <input type="password" id="editAdminPassword" name="editAdminPassword">
+            </div>
+            <div class="form-group">
+              <label for="editAdminRole">Role</label>
+              <select id="editAdminRole" name="editAdminRole" required>
+                <option value="Super Admin">Super Admin</option>
+                <option value="Admin">Admin</option>
+                <option value="Manager">Manager</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editAdminStatus">Status</label>
+              <select id="editAdminStatus" name="editAdminStatus" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn cancel" id="cancelEditAdmin">Cancel</button>
+          <button class="modal-btn save" id="saveEditAdmin">Save Changes</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Load and display admins
+      async function loadAdmins() {
+          try {
+              const token = localStorage.getItem('access_token');
+              if (!token) {
+                  window.location.href = 'account.html';
+                  return;
+              }
+
+              console.log('Fetching admins...'); // Debug log
+              const response = await fetch('http://localhost:8000/api/admins/', {
+                  headers: {
+                      'Authorization': `Bearer ${token}`
+                  }
+              });
+
+              if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
+              }
+
+              const admins = await response.json();
+              console.log('Received admins:', admins); // Debug log
+
+              const tableBody = document.querySelector('.admins-table tbody');
+              tableBody.innerHTML = '';
+
+              if (!admins || admins.length === 0) {
+                  tableBody.innerHTML = `
+                      <tr>
+                          <td colspan="7" class="no-data">No admins found</td>
+                      </tr>
+                  `;
+                  return;
+              }
+
+              admins.forEach(admin => {
+                  const row = `
+                      <tr>
+                          <td>#ADM-${String(admin.id).padStart(3, '0')}</td>
+                          <td>${admin.first_name} ${admin.last_name}</td>
+                          <td>${admin.email}</td>
+                          <td>${admin.role}</td>
+                          <td>${formatDate(admin.last_login) || 'Never'}</td>
+                          <td>
+                              <span class="status ${admin.is_active ? 'active' : 'inactive'}">
+                                  ${admin.is_active ? 'Active' : 'Inactive'}
+                              </span>
+                          </td>
+                          <td>
+                              <button class="action-btn" onclick="editAdmin(${admin.id})">
+                                  <i class="fas fa-edit"></i>
+                              </button>
+                              <button class="action-btn delete" onclick="deleteAdmin(${admin.id})">
+                                  <i class="fas fa-trash"></i>
+                              </button>
+                          </td>
+                      </tr>
+                  `;
+                  tableBody.innerHTML += row;
+              });
+
+          } catch (error) {
+              console.error('Error loading admins:', error);
+              const tableBody = document.querySelector('.admins-table tbody');
+              tableBody.innerHTML = `
+                  <tr>
+                      <td colspan="7" class="error-message">Error loading admins: ${error.message}</td>
+                  </tr>
+              `;
+          }
+      }
+
+      // Add admin form submit handler
+      document.getElementById('addAdminForm').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          try {
+              const formData = new FormData(this);
+              const adminData = {
+                  username: formData.get('adminEmail'),
+                  email: formData.get('adminEmail'),
+                  password: formData.get('adminPassword'),
+                  first_name: formData.get('adminName').split(' ')[0],
+                  last_name: formData.get('adminName').split(' ').slice(1).join(' '),
+                  is_active: formData.get('adminStatus') === 'active'
+              };
+
+              const response = await fetch('http://localhost:8000/api/admin/create/', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                  },
+                  body: JSON.stringify(adminData)
+              });
+
+              if (response.ok) {
+                  alert('Admin added successfully!');
+                  this.reset();
+                  document.getElementById('addAdminModal').classList.remove('active');
+                  loadAdmins();
+              } else {
+                  const error = await response.json();
+                  throw new Error(error.detail || 'Failed to add admin');
+              }
+          } catch (error) {
+              console.error('Error:', error);
+              alert(error.message);
+          }
+      });
+
+      // Edit admin function
+      async function editAdmin(id) {
+          try {
+              const response = await fetch(`http://localhost:8000/api/admins/${id}/`, {
+                  headers: {
+                      'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                  }
+              });
+
+              if (!response.ok) throw new Error('Failed to fetch admin data');
+
+              const admin = await response.json();
+              
+              // Populate edit form
+              document.getElementById('editAdminName').value = `${admin.first_name} ${admin.last_name}`;
+              document.getElementById('editAdminEmail').value = admin.email;
+              document.getElementById('editAdminRole').value = admin.role;
+              document.getElementById('editAdminStatus').value = admin.is_active ? 'active' : 'inactive';
+              
+              // Store admin ID for update
+              document.getElementById('editAdminForm').dataset.adminId = id;
+              
+              // Show modal
+              document.getElementById('editAdminModal').classList.add('active');
+          } catch (error) {
+              console.error('Error:', error);
+              alert(error.message);
+          }
+      }
+
+      // Save edited admin
+      document.getElementById('editAdminForm').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          try {
+              const formData = new FormData(this);
+              const adminId = this.dataset.adminId;
+              const nameParts = formData.get('editAdminName').split(' ');
+
+              const adminData = {
+                  first_name: nameParts[0],
+                  last_name: nameParts.slice(1).join(' '),
+                  email: formData.get('editAdminEmail'),
+                  role: formData.get('editAdminRole'),
+                  is_active: formData.get('editAdminStatus') === 'active'
+              };
+
+              if (formData.get('editAdminPassword')) {
+                  adminData.password = formData.get('editAdminPassword');
+              }
+
+              const response = await fetch(`http://localhost:8000/api/admins/${adminId}/`, {
+                  method: 'PUT',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                  },
+                  body: JSON.stringify(adminData)
+              });
+
+              if (response.ok) {
+                  alert('Admin updated successfully!');
+                  document.getElementById('editAdminModal').classList.remove('active');
+                  loadAdmins();
+              } else {
+                  const error = await response.json();
+                  throw new Error(error.detail || 'Failed to update admin');
+              }
+          } catch (error) {
+              console.error('Error:', error);
+              alert(error.message);
+          }
+      });
+
+      // Delete admin function
+      async function deleteAdmin(id) {
+          if (!confirm('Are you sure you want to delete this admin?')) return;
+
+          try {
+              const response = await fetch(`http://localhost:8000/api/admins/${id}/`, {
+                  method: 'DELETE',
+                  headers: {
+                      'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                  }
+              });
+
+              if (response.ok) {
+                  alert('Admin deleted successfully');
+                  loadAdmins();
+              } else {
+                  throw new Error('Failed to delete admin');
+              }
+          } catch (error) {
+              console.error('Error:', error);
+              alert(error.message);
+          }
+      }
+
+      // Format date helper function
+      function formatDate(dateString) {
+          if (!dateString) return '';
+          return new Date(dateString).toLocaleString();
+      }
+
+      // Load admins when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+          const token = localStorage.getItem('access_token');
+          if (!token) {
+              window.location.href = 'account.html';
+              return;
+          }
+          loadAdmins();
+      });
+
+      // Add search functionality
+      document.querySelector('.search-bar input').addEventListener('input', debounce(loadAdmins, 300));
+
+      // Debounce helper function
+      function debounce(func, wait) {
+          let timeout;
+          return function executedFunction(...args) {
+              const later = () => {
+                  clearTimeout(timeout);
+                  func(...args);
+              };
+              clearTimeout(timeout);
+              timeout = setTimeout(later, wait);
+          };
+      }
+    </script>
+    <script>
+      // Modal handlers
+      document.getElementById('addAdminBtn').addEventListener('click', function() {
+          document.getElementById('addAdminModal').classList.add('active');
+      });
+
+      document.getElementById('closeAdminModal').addEventListener('click', function() {
+          document.getElementById('addAdminModal').classList.remove('active');
+      });
+
+      document.getElementById('cancelAddAdmin').addEventListener('click', function() {
+          document.getElementById('addAdminModal').classList.remove('active');
+      });
+
+      document.getElementById('closeEditAdminModal').addEventListener('click', function() {
+          document.getElementById('editAdminModal').classList.remove('active');
+      });
+
+      document.getElementById('cancelEditAdmin').addEventListener('click', function() {
+          document.getElementById('editAdminModal').classList.remove('active');
+      });
+
+      // Add form submit handlers
+      document.getElementById('saveAdmin').addEventListener('click', function(e) {
+          e.preventDefault();
+          document.getElementById('addAdminForm').dispatchEvent(new Event('submit'));
+      });
+
+      document.getElementById('saveEditAdmin').addEventListener('click', function(e) {
+          e.preventDefault();
+          document.getElementById('editAdminForm').dispatchEvent(new Event('submit'));
+      });
+    </script>
+  </body>
+</html>

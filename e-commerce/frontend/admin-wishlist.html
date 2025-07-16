@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Wishlist - ShoeHub</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .wishlist-container {
+            padding: 20px;
+            background: #f8f8f8;
+            min-height: 100vh;
+        }
+
+        .wishlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .wishlist-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-width: 150px;
+        }
+
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .wishlist-item {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .wishlist-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .wishlist-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .wishlist-details {
+            padding: 15px;
+        }
+
+        .wishlist-details h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .wishlist-details p {
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .wishlist-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .wishlist-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .status.in-stock {
+            background: #e6f7ed;
+            color: #00875a;
+        }
+
+        .status.out-of-stock {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #ff523b;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f8f8f8;
+            color: #333;
+        }
+
+        .btn-primary:hover {
+            background: #ff3d24;
+        }
+
+        .btn-secondary:hover {
+            background: #eee;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            width: 300px;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            width: 100%;
+            margin-left: 10px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .wishlist-filters {
+                flex-direction: column;
+            }
+
+            .wishlist-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wishlist-container">
+        <div class="wishlist-header">
+            <h1>Wishlist Management</h1>
+            <div class="search-bar">
+                <i class="fa fa-search"></i>
+                <input type="search" placeholder="Search wishlist items...">
+            </div>
+        </div>
+
+        <div class="wishlist-filters">
+            <select class="filter-select">
+                <option value="">All Categories</option>
+                <option value="sneakers">Sneakers</option>
+                <option value="running">Running</option>
+                <option value="casual">Casual</option>
+                <option value="sports">Sports</option>
+            </select>
+            <select class="filter-select">
+                <option value="">All Status</option>
+                <option value="in-stock">In Stock</option>
+                <option value="out-of-stock">Out of Stock</option>
+            </select>
+            <select class="filter-select">
+                <option value="">Sort By</option>
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="price-low">Price: Low to High</option>
+            </select>
+        </div>
+
+        <div class="wishlist-grid">
+            <!-- Wishlist Item 1 -->
+            <div class="wishlist-item">
+                <img src="images/product-1.jpg" alt="Nike Air Max">
+                <div class="wishlist-details">
+                    <h3>Nike Air Max 270</h3>
+                    <p>Price: $199.99</p>
+                    <p>Added by: John Doe</p>
+                    <p>Date Added: 2024-03-15</p>
+                </div>
+                <div class="wishlist-actions">
+                    <span class="wishlist-status status in-stock">In Stock</span>
+                    <div class="action-buttons">
+                        <button class="action-btn btn-primary">Add to Cart</button>
+                        <button class="action-btn btn-secondary">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wishlist Item 2 -->
+            <div class="wishlist-item">
+                <img src="images/product-2.jpg" alt="Adidas Ultraboost">
+                <div class="wishlist-details">
+                    <h3>Adidas Ultraboost 21</h3>
+                    <p>Price: $179.99</p>
+                    <p>Added by: Jane Smith</p>
+                    <p>Date Added: 2024-03-14</p>
+                </div>
+                <div class="wishlist-actions">
+                    <span class="wishlist-status status out-of-stock">Out of Stock</span>
+                    <div class="action-buttons">
+                        <button class="action-btn btn-primary">Notify When Available</button>
+                        <button class="action-btn btn-secondary">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wishlist Item 3 -->
+            <div class="wishlist-item">
+                <img src="images/product-3.jpg" alt="Puma RS-X">
+                <div class="wishlist-details">
+                    <h3>Puma RS-X³ Puzzle</h3>
+                    <p>Price: $129.99</p>
+                    <p>Added by: Mike Johnson</p>
+                    <p>Date Added: 2024-03-13</p>
+                </div>
+                <div class="wishlist-actions">
+                    <span class="wishlist-status status in-stock">In Stock</span>
+                    <div class="action-buttons">
+                        <button class="action-btn btn-primary">Add to Cart</button>
+                        <button class="action-btn btn-secondary">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wishlist Item 4 -->
+            <div class="wishlist-item">
+                <img src="images/product-4.jpg" alt="New Balance">
+                <div class="wishlist-details">
+                    <h3>New Balance 990v5</h3>
+                    <p>Price: $189.99</p>
+                    <p>Added by: Sarah Wilson</p>
+                    <p>Date Added: 2024-03-12</p>
+                </div>
+                <div class="wishlist-actions">
+                    <span class="wishlist-status status in-stock">In Stock</span>
+                    <div class="action-buttons">
+                        <button class="action-btn btn-primary">Add to Cart</button>
+                        <button class="action-btn btn-secondary">Remove</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Search functionality
+        const searchInput = document.querySelector('.search-bar input');
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const wishlistItems = document.querySelectorAll('.wishlist-item');
+            
+            wishlistItems.forEach(item => {
+                const title = item.querySelector('h3').textContent.toLowerCase();
+                const user = item.querySelector('.wishlist-details p:nth-child(3)').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || user.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter functionality
+        const filterSelects = document.querySelectorAll('.filter-select');
+        filterSelects.forEach(select => {
+            select.addEventListener('change', function() {
+                // Add filter logic here
+                console.log('Filter changed:', this.value);
+            });
+        });
+
+        // Action buttons functionality
+        const actionButtons = document.querySelectorAll('.action-btn');
+        actionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (this.classList.contains('btn-primary')) {
+                    // Add to cart or notify logic
+                    console.log('Primary action clicked');
+                } else if (this.classList.contains('btn-secondary')) {
+                    // Remove from wishlist logic
+                    console.log('Secondary action clicked');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,16 @@
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+.col-2 {
+  flex: 1;
+  min-width: 300px;
+  padding: 20px;
+}
+.single-product img#ProductImg {
+  width: 100%;
+  max-width: 400px;
+  display: block;
+  margin: 0 auto;
+}

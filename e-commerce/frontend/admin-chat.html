@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat - ShoeHub Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="sidebar-header">
+          <img src="images/logo-main.png" alt="Logo" class="logo">
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-section">
+            <h3>MAIN MENU</h3>
+            <ul>
+              <li>
+                <a href="admin.html">
+                  <i class="fas fa-th-large"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="admin-products.html">
+                  <i class="fas fa-box"></i>
+                  Products
+                  <span class="badge">+28</span>
+                </a>
+              </li>
+              <li>
+                <a href="admin-orders.html">
+                  <i class="fas fa-shopping-cart"></i>
+                  Orders
+                  <span class="badge">+28</span>
+                </a>
+              </li>
+             
+              <li class="has-submenu" id="admin-submenu">
+                <button class="submenu-btn">
+                  <span>
+                    <i class="fas fa-users"></i>
+                    Users
+                  </span>
+                  <i class="fas fa-chevron-down submenu-toggle"></i>
+                </button>
+                <ul class="submenu">
+                  <li>
+                    <a href="admin-customers.html">
+                      <i class="fas fa-user"></i>
+                      Customers
+                    </a>
+                  </li>
+                  <li>
+                    <a href="admin-admins.html">
+                      <i class="fas fa-user-shield"></i>
+                      Admins
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="#logout">
+                  <i class="fas fa-sign-out-alt"></i>
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="nav-section">
+            <h3>APPS</h3>
+            <ul>
+              <li>
+                <a href="admin-email.html">
+                  <i class="fas fa-envelope"></i>
+                  Email
+                </a>
+              </li>
+              <li class="active">
+                <a href="admin-chat.html">
+                  <i class="fas fa-comments"></i>
+                  Chat
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="admin-main">
+        <header class="admin-header">
+          <div class="header-left">
+            <button id="sidebar-toggle">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+              <i class="fas fa-search"></i>
+              <input type="search" placeholder="Search chats..." />
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="header-actions">
+              <button class="action-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">5</span>
+              </button>
+              <button class="action-btn">
+                <i class="fas fa-envelope"></i>
+                <span class="notification-badge">3</span>
+              </button>
+            </div>
+            <div class="admin-profile">
+              <img src="images/adminicon.png" alt="Admin Avatar" />
+              <span>Kushal Panthadas</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="admin-content">
+          <div class="content-header">
+            <h1>Chat Support</h1>
+            <div class="chat-status">
+              <span class="status-indicator online"></span>
+              Online
+            </div>
+          </div>
+
+          <!-- Chat Interface -->
+          <div class="chat-interface">
+            <div class="chat-sidebar">
+              <div class="chat-filters">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">Active</button>
+                <button class="filter-btn">Resolved</button>
+              </div>
+              <div class="chat-list">
+                <div class="chat-item active">
+                  <div class="chat-avatar">
+                    <img src="images/avatar1.png" alt="Customer">
+                    <span class="status-indicator online"></span>
+                  </div>
+                  <div class="chat-info">
+                    <div class="chat-name">John Doe</div>
+                    <div class="chat-preview">Hello, I have a question about my order...</div>
+                  </div>
+                  <div class="chat-time">10:30 AM</div>
+                </div>
+                <!-- Add more chat items here -->
+              </div>
+            </div>
+            <div class="chat-main">
+              <div class="chat-header">
+                <div class="chat-user-info">
+                  <img src="images/avatar1.png" alt="Customer">
+                  <div>
+                    <h3>John Doe</h3>
+                    <span class="status-indicator online"></span>
+                    <span>Online</span>
+                  </div>
+                </div>
+                <div class="chat-actions">
+                  <button class="action-btn"><i class="fas fa-phone"></i></button>
+                  <button class="action-btn"><i class="fas fa-video"></i></button>
+                  <button class="action-btn"><i class="fas fa-info-circle"></i></button>
+                </div>
+              </div>
+              <div class="chat-messages">
+                <div class="message customer">
+                  <div class="message-content">
+                    Hello, I have a question about my order #12345
+                  </div>
+                  <div class="message-time">10:30 AM</div>
+                </div>
+                <div class="message admin">
+                  <div class="message-content">
+                    Hi John! I'll be happy to help you with your order. What would you like to know?
+                  </div>
+                  <div class="message-time">10:31 AM</div>
+                </div>
+                <!-- Add more messages here -->
+              </div>
+              <div class="chat-input">
+                <input type="text" placeholder="Type your message...">
+                <button class="send-btn"><i class="fas fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="admin.js"></script>
+  </body>
+</html> 

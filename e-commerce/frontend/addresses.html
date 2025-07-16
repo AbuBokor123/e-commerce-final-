@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Addresses - ShoeHub</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+      .addresses-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .addresses-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .addresses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 20px;
+      }
+
+      .address-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        overflow: hidden;
+      }
+
+      .address-header {
+        padding: 15px;
+        background: #f8f9fa;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .address-header h4 {
+        margin: 0;
+        font-size: 16px;
+        color: #333;
+      }
+
+      .default-badge {
+        background: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+      }
+
+      .address-details {
+        padding: 15px;
+      }
+
+      .address-details p {
+        margin: 5px 0;
+        color: #666;
+      }
+
+      .address-map {
+        height: 200px;
+        margin: 15px;
+        border-radius: 5px;
+        overflow: hidden;
+      }
+
+      .address-actions {
+        padding: 15px;
+        display: flex;
+        gap: 10px;
+        border-top: 1px solid #eee;
+      }
+
+      .btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+        flex: 1;
+      }
+
+      .btn-primary {
+        background: #ff523b;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #ff6b6b;
+      }
+
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #c82333;
+      }
+
+      .add-address-btn {
+        background: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .add-address-btn:hover {
+        background: #218838;
+      }
+
+      .add-address-btn i {
+        font-size: 18px;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: white;
+        width: 90%;
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 10px;
+        position: relative;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .modal-header h3 {
+        margin: 0;
+        font-size: 18px;
+        color: #333;
+      }
+
+      .close-modal {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #666;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #666;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <div class="container">
+      <div class="navbar">
+        <div class="logo">
+          <a href="index.html"><img src="images/logo-main.png" width="125px" /></a>
+        </div>
+        <nav>
+          <ul id="MenuItems">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="account.html">Account</a></li>
+          </ul>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 20px">
+          <a href="wishlist.html"><img src="images/wishlist.png" width="25px" height="25px" /></a>
+          <a href="cart.html"><img src="images/cart.png" width="25px" height="25px" /></a>
+        </div>
+        <img src="images/menu.png" class="menu-icon" onClick="menutoggle()" />
+      </div>
+    </div>
+
+    <div class="addresses-container">
+      <div class="addresses-header">
+        <h1>My Addresses</h1>
+        <button class="add-address-btn" onclick="openAddAddressModal()">
+          <i class="fa fa-plus"></i> Add New Address
+        </button>
+      </div>
+
+      <div class="addresses-grid">
+        <!-- Addresses will be dynamically populated here -->
+      </div>
+    </div>
+
+    <!-- Add/Edit Address Modal -->
+    <div id="addressModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Add New Address</h3>
+          <button class="close-modal" onclick="closeAddressModal()">&times;</button>
+        </div>
+        <form id="addressForm" onsubmit="handleAddressSubmit(event)">
+          <div class="form-group">
+            <label>Address Type</label>
+            <select name="type" required>
+              <option value="Home">Home</option>
+              <option value="Work">Work</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Street Address</label>
+            <input type="text" name="street" required>
+          </div>
+          <div class="form-group">
+            <label>City</label>
+            <input type="text" name="city" required>
+          </div>
+          <div class="form-group">
+            <label>Country</label>
+            <input type="text" name="country" required>
+          </div>
+          <div class="form-group">
+            <label>Set as Default</label>
+            <input type="checkbox" name="isDefault">
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Address</button>
+            <button type="button" class="btn btn-danger" onclick="closeAddressModal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="footer-col-2">
+            <img src="images/logo-main.png" />
+            <p>
+              Our Purpose Is To Sustainably Make the Pleasure and Benefits of
+              Sports Accessible to the Many.
+            </p>
+          </div>
+          <div class="footer-col-3">
+            <h3>Useful Links</h3>
+            <ul>
+              <li><a href="#">Coupons</a></li>
+              <li><a href="#">Blog Post</a></li>
+              <li><a href="#">Return Policy</a></li>
+              <li><a href="#">Join Affiliate</a></li>
+            </ul>
+          </div>
+          <div class="footer-col-4">
+            <h3>Follow us</h3>
+            <ul>
+              <li><a href="#">Facebook</a></li>
+              <li><a href="#">Twitter</a></li>
+              <li><a href="#">Instagram</a></li>
+              <li><a href="#">YouTube</a></li>
+            </ul>
+          </div>
+        </div>
+        <hr />
+        <p class="copyright">Copyright 2025 - ShoeHub</p>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="dashboard.js"></script>
+    <script>
+      // Toggle Menu
+      var MenuItems = document.getElementById("MenuItems");
+      MenuItems.style.maxHeight = "0px";
+
+      function menutoggle() {
+        if (MenuItems.style.maxHeight == "0px") {
+          MenuItems.style.maxHeight = "200px";
+        } else {
+          MenuItems.style.maxHeight = "0px";
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const dashboard = new DashboardUI();
+        
+        // Initialize addresses page
+        const addressesGrid = document.querySelector('.addresses-grid');
+        const addressModal = document.getElementById('addressModal');
+        const addressForm = document.getElementById('addressForm');
+
+        // Render addresses
+        function renderAddresses() {
+          addressesGrid.innerHTML = dashboardState.addresses.map(address => `
+            <div class="address-card" data-id="${address.id}">
+              <div class="address-header">
+                <h4>${address.type} Address</h4>
+                ${address.isDefault ? '<span class="default-badge">Default</span>' : ''}
+              </div>
+              <div class="address-details">
+                <p>${address.street}</p>
+                <p>${address.city}</p>
+                <p>${address.country}</p>
+              </div>
+              <div class="address-map" id="map-${address.id}"></div>
+              <div class="address-actions">
+                <button class="btn btn-primary" onclick="editAddress(${address.id})">Edit</button>
+                <button class="btn btn-danger" onclick="deleteAddress(${address.id})">Delete</button>
+              </div>
+            </div>
+          `).join('');
+
+          // Initialize maps
+          dashboardState.addresses.forEach(address => {
+            const map = L.map(`map-${address.id}`).setView(address.coordinates, 15);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            L.marker(address.coordinates).addTo(map);
+          });
+        }
+
+        // Modal functions
+        window.openAddAddressModal = function() {
+          addressModal.style.display = 'block';
+          addressForm.reset();
+        };
+
+        window.closeAddressModal = function() {
+          addressModal.style.display = 'none';
+        };
+
+        window.editAddress = function(id) {
+          const address = dashboardState.addresses.find(a => a.id === id);
+          if (address) {
+            addressForm.elements.type.value = address.type;
+            addressForm.elements.street.value = address.street;
+            addressForm.elements.city.value = address.city;
+            addressForm.elements.country.value = address.country;
+            addressForm.elements.isDefault.checked = address.isDefault;
+            addressForm.dataset.editId = id;
+            addressModal.style.display = 'block';
+          }
+        };
+
+        window.deleteAddress = function(id) {
+          if (confirm('Are you sure you want to delete this address?')) {
+            dashboardState.addresses = dashboardState.addresses.filter(a => a.id !== id);
+            renderAddresses();
+          }
+        };
+
+        window.handleAddressSubmit = function(e) {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const addressData = {
+            id: parseInt(e.target.dataset.editId) || Date.now(),
+            type: formData.get('type'),
+            street: formData.get('street'),
+            city: formData.get('city'),
+            country: formData.get('country'),
+            isDefault: formData.get('isDefault') === 'on',
+            coordinates: [24.8949, 91.8687] // This would be set by a map picker in a real app
+          };
+
+          if (e.target.dataset.editId) {
+            // Update existing address
+            const index = dashboardState.addresses.findIndex(a => a.id === parseInt(e.target.dataset.editId));
+            if (index !== -1) {
+              dashboardState.addresses[index] = addressData;
+            }
+          } else {
+            // Add new address
+            dashboardState.addresses.push(addressData);
+          }
+
+          // If this is set as default, unset others
+          if (addressData.isDefault) {
+            dashboardState.addresses.forEach(a => {
+              if (a.id !== addressData.id) {
+                a.isDefault = false;
+              }
+            });
+          }
+
+          renderAddresses();
+          closeAddressModal();
+        };
+
+        // Example: Add this to your fetch call
+        const token = localStorage.getItem('access'); // or your token key
+        fetch('http://localhost:8000/api/shippingaddress/', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(res => {
+          if (res.status === 401) {
+            window.location.href = 'account.html'; // or login.html
+            return [];
+          }
+          return res.json();
+        })
+        .then(addresses => {
+          dashboardState.addresses = addresses;
+          renderAddresses();
+        })
+        .catch(err => console.error('Error fetching addresses:', err));
+
+        // Initial render
+        renderAddresses();
+      });
+    </script>
+  </body>
+</html>

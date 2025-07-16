@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Methods - ShoeHub</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      .payment-methods-container {
+        padding: 40px 0;
+      }
+
+      .payment-methods-title {
+        text-align: center;
+        margin-bottom: 40px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .payment-methods-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+      }
+
+      .payment-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        position: relative;
+      }
+
+      .card-preview {
+        background: linear-gradient(45deg, #1a237e, #283593);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+      }
+
+      .card-type {
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+
+      .card-number {
+        font-size: 18px;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+      }
+
+      .card-details {
+        color: #666;
+        line-height: 1.6;
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .card-btn {
+        padding: 8px 15px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        cursor: pointer;
+        border: none;
+      }
+
+      .edit-btn {
+        background: #f8f8f8;
+        color: #333;
+      }
+
+      .delete-btn {
+        background: #ffebee;
+        color: #d32f2f;
+      }
+
+      .set-default-btn {
+        background: #e6f7ed;
+        color: #00875a;
+      }
+
+      .add-card-btn {
+        background: #ff523b;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 30px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 20px;
+      }
+
+      .add-card-btn:hover {
+        background: #563434;
+      }
+
+      .empty-payment-methods {
+        text-align: center;
+        padding: 60px 0;
+      }
+
+      .empty-payment-methods i {
+        font-size: 60px;
+        color: #ccc;
+        margin-bottom: 20px;
+      }
+
+      .empty-payment-methods h2 {
+        font-size: 24px;
+        margin-bottom: 15px;
+      }
+
+      .empty-payment-methods p {
+        color: #777;
+        margin-bottom: 25px;
+      }
+
+      /* Card Form Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: white;
+        width: 90%;
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 30px;
+        border-radius: 8px;
+        position: relative;
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 24px;
+        cursor: pointer;
+        color: #666;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #ff523b;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 15px;
+      }
+
+      .form-row .form-group {
+        flex: 1;
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .cancel-btn {
+        background: #f8f8f8;
+        color: #333;
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      .save-btn {
+        background: #ff523b;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+      }
+
+      .save-btn:hover {
+        background: #563434;
+      }
+
+      /* Cool Styles */
+      .cool-payment-bg {
+        background: linear-gradient(120deg, #f8fafc 0%, #e3e6f3 100%);
+        min-height: 100vh;
+        padding: 60px 0 40px 0;
+      }
+
+      .cool-card {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 40px 32px 32px 32px;
+        position: relative;
+      }
+
+      .cool-title {
+        font-size: 2.2rem;
+        letter-spacing: 1px;
+        color: #23235b;
+        margin-bottom: 32px;
+        text-align: center;
+      }
+
+      .cool-section {
+        margin-bottom: 32px;
+        background: #f4f7fb;
+        border-radius: 10px;
+        padding: 18px 22px;
+        box-shadow: 0 2px 8px rgba(44, 62, 80, 0.04);
+      }
+
+      .cool-label {
+        font-size: 1.1rem;
+        color: #23235b;
+        margin-bottom: 10px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .cool-select-wrap {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .cool-select {
+        padding: 10px 16px;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+        font-size: 1rem;
+        background: #fff;
+        min-width: 220px;
+        transition: border 0.2s;
+      }
+
+      .cool-select:focus {
+        border: 1.5px solid #ff523b;
+        outline: none;
+      }
+
+      .cool-link {
+        color: #ff523b;
+        font-weight: 500;
+        text-decoration: underline;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+
+      .cool-radio-group {
+        display: flex;
+        gap: 24px;
+        margin-top: 10px;
+      }
+
+      .cool-radio {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #23235b;
+        cursor: pointer;
+      }
+
+      .cool-radio input[type="radio"] {
+        accent-color: #ff523b;
+        width: 18px;
+        height: 18px;
+      }
+
+      .cool-shadow {
+        box-shadow: 0 4px 16px rgba(44, 62, 80, 0.08);
+        transition: box-shadow 0.2s;
+      }
+
+      .cool-shadow:hover {
+        box-shadow: 0 8px 32px rgba(44, 62, 80, 0.16);
+      }
+
+      .cool-card-bg {
+        background: linear-gradient(135deg, #23235b 60%, #ff523b 100%);
+      }
+
+      .cool-card-bg2 {
+        background: linear-gradient(135deg, #ff523b 60%, #23235b 100%);
+      }
+
+      .cool-btn {
+        background: linear-gradient(90deg, #ff523b 60%, #23235b 100%);
+        color: #fff !important;
+        border: none;
+        box-shadow: 0 2px 8px rgba(44, 62, 80, 0.08);
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: background 0.2s, box-shadow 0.2s;
+      }
+
+      .cool-btn:hover {
+        background: linear-gradient(90deg, #23235b 60%, #ff523b 100%);
+        box-shadow: 0 4px 16px rgba(44, 62, 80, 0.16);
+      }
+
+      @media (max-width: 800px) {
+        .cool-card {
+          padding: 18px 6vw 18px 6vw;
+        }
+
+        .cool-section {
+          padding: 12px 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <div class="container">
+      <div class="navbar">
+        <div class="logo">
+          <a href="index.html"
+            ><img src="images/logo-main.png" width="125px"
+          /></a>
+        </div>
+        <nav>
+          <ul id="MenuItems">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="account.html">Account</a></li>
+          </ul>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 20px">
+          <a href="wishlist.html"
+            ><img src="images/wishlist.png" width="25px" height="25px"
+          /></a>
+          <a href="cart.html"
+            ><img src="images/cart.png" width="25px" height="25px"
+          /></a>
+        </div>
+        <img src="images/menu.png" class="menu-icon" onClick="menutoggle()" />
+      </div>
+    </div>
+
+    <!-- Payment Methods Section -->
+    <div class="payment-methods-container cool-payment-bg">
+      <div class="cool-card">
+        <h1 class="payment-methods-title cool-title">Payment Methods</h1>
+
+        <div id="cartSummary" class="cool-section"></div>
+
+        <div id="addressSection" class="cool-section">
+          <h3 class="cool-label"><i class="fa fa-map-marker"></i> Select Delivery Address</h3>
+          <div class="cool-select-wrap">
+            <select id="addressSelect" class="cool-select"></select>
+            <a href="#" id="manageAddressesBtn" class="cool-link">Manage Addresses</a>
+          </div>
+        </div>
+
+        <div id="paymentTypeSection" class="cool-section">
+          <h3 class="cool-label"><i class="fa fa-credit-card"></i> Select Payment Method</h3>
+          <div class="cool-radio-group">
+            <label class="cool-radio"><input type="radio" name="paymentType" value="cash" checked> <span>Cash</span></label>
+            <label class="cool-radio"><input type="radio" name="paymentType" value="bkash"> <span>Bkash</span></label>
+            <label class="cool-radio"><input type="radio" name="paymentType" value="card"> <span>Card</span></label>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:30px;">
+          <button id="placeOrderBtn" class="add-card-btn cool-btn">Place Order (Cash)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add/Edit Card Modal -->
+    <div id="cardModal" class="modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Add New Card</h2>
+        <form id="cardForm" onsubmit="saveCard(event)">
+          <div class="form-group">
+            <label for="cardType">Card Type</label>
+            <select id="cardType" required>
+              <option value="visa">Visa</option>
+              <option value="mastercard">Mastercard</option>
+              <option value="amex">American Express</option>
+              <option value="discover">Discover</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="cardNumber">Card Number</label>
+            <input
+              type="text"
+              id="cardNumber"
+              required
+              maxlength="19"
+              placeholder="1234 5678 9012 3456"
+            />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="expiryDate">Expiry Date</label>
+              <input
+                type="text"
+                id="expiryDate"
+                required
+                maxlength="5"
+                placeholder="MM/YY"
+              />
+            </div>
+            <div class="form-group">
+              <label for="cvv">CVV</label>
+              <input
+                type="text"
+                id="cvv"
+                required
+                maxlength="4"
+                placeholder="123"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="cardName">Name on Card</label>
+            <input type="text" id="cardName" required />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" onclick="closeModal()">
+              Cancel
+            </button>
+            <button type="submit" class="save-btn">Save Card</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Address Modal -->
+    <div id="addressModal" class="modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeAddressModal()">&times;</span>
+        <h2>Add Shipping Address</h2>
+        <form id="addressForm">
+          <div class="form-group">
+            <label for="addressInput">Address</label>
+            <input type="text" id="addressInput" required />
+          </div>
+          <div class="form-group">
+            <label for="cityInput">City</label>
+            <input type="text" id="cityInput" required />
+          </div>
+          <div class="form-group">
+            <label for="stateInput">State</label>
+            <input type="text" id="stateInput" required />
+          </div>
+          <div class="form-group">
+            <label for="zipInput">Zip Code</label>
+            <input type="text" id="zipInput" required />
+          </div>
+          <div class="form-group">
+            <label for="countryInput">Country</label>
+            <input type="text" id="countryInput" required />
+          </div>
+          <div class="form-actions">
+            <button type="button" class="cancel-btn" onclick="closeAddressModal()">
+              Cancel
+            </button>
+            <button type="submit" class="save-btn">Save Address</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Flash message -->
+<div id="flashMessage" style="display:none;position:fixed;top:30px;right:30px;background:#4BB543;color:#fff;padding:18px 32px;border-radius:8px;z-index:9999;font-size:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+  Order placed successfully!
+</div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="footer-col-1">
+            <h3>Download Our App</h3>
+            <p>Download App for Android and ios mobile phone.</p>
+            <div class="app-logo">
+              <img src="images/play-store.png" alt />
+              <img src="images/app-store.png" alt />
+            </div>
+          </div>
+          <div class="footer-col-2">
+            <img src="images/logo-main.png" />
+            <p>
+              Our Purpose Is To Sustainably Make the Pleasure and Benefits of
+              Sports Accessible to the Many.
+            </p>
+          </div>
+          <div class="footer-col-3">
+            <h3>Useful Links</h3>
+            <ul>
+              <li>Coupons</li>
+              <li>Blog Post</li>
+              <li>Return Policy</li>
+              <li>Join Affiliate</li>
+            </ul>
+          </div>
+          <div class="footer-col-4">
+            <h3>Follow us</h3>
+            <ul>
+              <li>Facebook</li>
+              <li>Twitter</li>
+              <li>Instagram</li>
+              <li>Youtube</li>
+            </ul>
+          </div>
+        </div>
+
+        <hr />
+        <!--horizontal line-->
+        <p class="copyright">Copyright 2025</p>
+      </div>
+    </div>
+
+    <script>
+      // Toggle Menu
+      var MenuItems = document.getElementById("MenuItems");
+      MenuItems.style.maxHeight = "0px";
+
+      function menutoggle() {
+        if (MenuItems.style.maxHeight == "0px") {
+          MenuItems.style.maxHeight = "200px";
+        } else {
+          MenuItems.style.maxHeight = "0px";
+        }
+      }
+
+      // Card Functions
+      function showAddCardModal() {
+        document.getElementById("modalTitle").textContent = "Add New Card";
+        document.getElementById("cardForm").reset();
+        document.getElementById("cardModal").style.display = "block";
+      }
+
+      function editCard(cardId) {
+        document.getElementById("modalTitle").textContent = "Edit Card";
+        // In a real implementation, you would load the card data here
+        document.getElementById("cardModal").style.display = "block";
+      }
+
+      function closeModal() {
+        document.getElementById("cardModal").style.display = "none";
+      }
+
+      function saveCard(event) {
+        event.preventDefault();
+        // In a real implementation, you would save the card data here
+        alert("Card saved successfully!");
+        closeModal();
+      }
+
+      function deleteCard(cardId) {
+        if (confirm("Are you sure you want to delete this card?")) {
+          const cardElement = document
+            .querySelector(`[onclick="deleteCard(${cardId})"]`)
+            .closest(".payment-card");
+          cardElement.remove();
+          checkEmptyPaymentMethods();
+        }
+      }
+
+      function setDefaultCard(cardId) {
+        // Remove default button from all cards
+        document
+          .querySelectorAll(".set-default-btn")
+          .forEach((btn) => btn.remove());
+
+        // Add default button to selected card
+        const cardElement = document
+          .querySelector(`[onclick="setDefaultCard(${cardId})"]`)
+          .closest(".payment-card");
+        const cardActions = cardElement.querySelector(".card-actions");
+        const defaultBtn = document.createElement("button");
+        defaultBtn.className = "card-btn set-default-btn";
+        defaultBtn.textContent = "Set as Default";
+        defaultBtn.onclick = function () {
+          setDefaultCard(cardId);
+        };
+        cardActions.appendChild(defaultBtn);
+      }
+
+      function checkEmptyPaymentMethods() {
+        const cards = document.querySelectorAll(".payment-card");
+        if (cards.length === 0) {
+          document.getElementById("paymentMethodsList").style.display = "none";
+          document.getElementById("emptyPaymentMethods").style.display =
+            "block";
+        } else {
+          document.getElementById("paymentMethodsList").style.display = "block";
+          document.getElementById("emptyPaymentMethods").style.display = "none";
+        }
+      }
+
+      // Card number formatting
+      document
+        .getElementById("cardNumber")
+        .addEventListener("input", function (e) {
+          let value = e.target.value.replace(/\D/g, "");
+          let formattedValue = "";
+          for (let i = 0; i < value.length; i++) {
+            if (i > 0 && i % 4 === 0) {
+              formattedValue += " ";
+            }
+            formattedValue += value[i];
+          }
+          e.target.value = formattedValue;
+        });
+
+      // Expiry date formatting
+      document
+        .getElementById("expiryDate")
+        .addEventListener("input", function (e) {
+          let value = e.target.value.replace(/\D/g, "");
+          if (value.length > 2) {
+            value = value.substring(0, 2) + "/" + value.substring(2);
+          }
+          e.target.value = value;
+        });
+
+      // Initialize payment methods state
+      document.addEventListener("DOMContentLoaded", function () {
+        checkEmptyPaymentMethods();
+      });
+
+      document.addEventListener('DOMContentLoaded', function() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const cartSummary = document.getElementById('cartSummary');
+  const tax = parseFloat(localStorage.getItem('cart_tax')) || 0;
+  let shipping_cost = 0;
+  let city = "";
+
+  if (!cartSummary) return;
+  if (cart.length === 0) {
+    cartSummary.innerHTML = "<p>Your cart is empty.</p>";
+    return;
+  }
+
+  Promise.all(cart.map(item =>
+    fetch(`http://localhost:8000/api/products/${item.id}/`).then(res => res.json())
+  )).then(products => {
+    let subtotal = 0;
+    cartSummary.innerHTML = `
+      <h3>Order Summary</h3>
+      <ul style="list-style:none;padding:0;">
+        ${products.map((product, idx) => {
+          const item = cart[idx];
+          const price = parseFloat(product.price);
+          const itemSubtotal = price * item.qty;
+          subtotal += itemSubtotal;
+          return `<li>
+            <b>${product.title}</b> (${item.size || '-'}, ${item.color || '-'}) x ${item.qty} - $${itemSubtotal.toFixed(2)}
+          </li>`;
+        }).join('')}
+      </ul>
+      <div><b>Subtotal:</b> $${subtotal.toFixed(2)}</div>
+      <div><b>Tax:</b> $${tax.toFixed(2)}</div>
+      <div id="shippingCostRow"><b>Shipping:</b> $0.00</div>
+      <strong id="orderTotal">Total: $${(subtotal + tax).toFixed(2)}</strong>
+    `;
+
+    // Set shipping cost based on city when address is selected
+    document.getElementById('addressSelect').addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      city = selectedOption.textContent.split(',')[1]?.trim().toLowerCase() || "";
+      console.log("Selected city:", city);
+      shipping_cost = (city === "sylhet") ? 50 : 120;
+      document.getElementById('shippingCostRow').innerHTML = `<b>Shipping:</b> $${shipping_cost.toFixed(2)}`;
+      document.getElementById('orderTotal').innerHTML = `Total: $${(subtotal + tax + shipping_cost).toFixed(2)}`;
+    });
+
+    // Trigger change event to set initial shipping cost
+    document.getElementById('addressSelect').dispatchEvent(new Event('change'));
+  });
+});
+
+      // Payment function
+      function getSelectedAddressId() {
+  const addressSelect = document.getElementById('addressSelect');
+  return addressSelect ? addressSelect.value : null;
+}
+
+function getSelectedPaymentType() {
+  const radios = document.getElementsByName('paymentType');
+  for (let radio of radios) {
+    if (radio.checked) return radio.value;
+  }
+  return null;
+}
+
+function payWithCard(cardId) {
+  const addressId = getSelectedAddressId();
+  const paymentType = getSelectedPaymentType();
+
+  if (!paymentType) {
+    alert('Please select a payment method.');
+    return;
+  }
+  // Prepare order data
+  placeOrder(addressId, paymentType, cardId);
+}
+
+// For cash/bkash
+function payWithOther() {
+  const addressId = getSelectedAddressId();
+  const paymentType = getSelectedPaymentType();
+  if (!addressId) {
+    alert('Please select a delivery address.');
+    return;
+  }
+  if (!paymentType) {
+    alert('Please select a payment method.');
+    return;
+  }
+  placeOrder(addressId, paymentType, null);
+}
+
+      document.addEventListener('DOMContentLoaded', function() {
+  const token = localStorage.getItem('access_token'); // <-- FIXED HERE
+  fetch('http://localhost:8000/api/shippingaddress/', {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error('Failed to fetch addresses');
+    }
+    return res.json();
+  })
+  .then(addresses => {
+    if (!addresses.length) {
+      alert('Please add a shipping address first!');
+      return;
+    }
+    const addressSelect = document.getElementById('addressSelect');
+    addressSelect.innerHTML = '';
+    addresses.forEach(addr => {
+      addressSelect.innerHTML += `<option value="${addr.id}">${addr.address}, ${addr.city}, ${addr.state}, ${addr.zip_code}, ${addr.country}</option>`;
+    });
+  });
+});
+
+// Show the address modal
+document.getElementById('manageAddressesBtn').addEventListener('click', function(e) {
+  e.preventDefault();
+  document.getElementById('addressModal').style.display = 'block';
+});
+
+// Close the address modal
+function closeAddressModal() {
+  document.getElementById('addressModal').style.display = 'none';
+}
+
+// Handle address form submission
+document.getElementById('addressForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const token = localStorage.getItem('access_token');
+  const address = document.getElementById('addressInput').value;
+  const city = document.getElementById('cityInput').value;
+  const state = document.getElementById('stateInput').value;
+  const zip_code = document.getElementById('zipInput').value;
+  const country = document.getElementById('countryInput').value;
+
+  fetch('http://localhost:8000/api/shippingaddress/', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ address, city, state, zip_code, country })
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Failed to add address');
+    return res.json();
+  })
+  .then(data => {
+    closeAddressModal();
+    alert('Address added successfully!');
+    // Refresh address dropdown
+    fetch('http://localhost:8000/api/shippingaddress/', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(addresses => {
+      const addressSelect = document.getElementById('addressSelect');
+      addressSelect.innerHTML = '';
+      addresses.forEach(addr => {
+        addressSelect.innerHTML += `<option value="${addr.id}">${addr.address}, ${addr.city}, ${addr.state}, ${addr.zip_code}, ${addr.country}</option>`;
+      });
+    });
+  })
+  .catch(() => alert('Failed to add address. Please try again.'));
+});
+
+function placeOrder(addressId, paymentType, cardId) {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  if (cart.length === 0) {
+    alert('Your cart is empty.');
+    return;
+  }
+
+  const tax = parseFloat(localStorage.getItem('cart_tax')) || 0;
+  let shipping_cost = 0;
+  let city = "";
+  const addressSelect = document.getElementById('addressSelect');
+  if (addressSelect) {
+    const selectedOption = addressSelect.options[addressSelect.selectedIndex];
+    city = selectedOption.textContent.split(',')[1]?.trim().toLowerCase() || "";
+    shipping_cost = (city === "sylhet" || "Sylhet") ? 50 : 120;
+  }
+
+  Promise.all(cart.map(item =>
+    item.price
+      ? Promise.resolve(item)
+      : fetch(`http://localhost:8000/api/products/${item.id}/`)
+          .then(res => res.json())
+          .then(product => ({ ...item, price: parseFloat(product.price) }))
+  )).then(cartWithPrices => {
+    let subtotal = 0;
+    cartWithPrices.forEach(item => { subtotal += item.qty * item.price; });
+    let discount = 0;
+    let total = subtotal + tax + shipping_cost - discount;
+
+    const token = localStorage.getItem('access_token');
+    fetch('http://localhost:8000/api/place_order/', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        cart: cartWithPrices,
+        shipping_id: addressId,
+        payment_method: paymentType,
+        subtotal,
+        discount,
+        tax,
+        shipping_cost,
+        total
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      // Show flash message
+      const flash = document.getElementById('flashMessage');
+      flash.style.display = 'block';
+      flash.textContent = 'Order placed successfully!';
+      localStorage.removeItem('cart');
+      setTimeout(() => {
+        flash.style.display = 'none';
+        window.location.href = "order.html";
+      }, 1800);
+    })
+    .catch(() => alert('Failed to place order.'));
+  });
+}
+
+document.querySelectorAll('input[name="paymentType"]').forEach(radio => {
+  radio.addEventListener('change', function() {
+    const btn = document.getElementById('placeOrderBtn');
+    if (this.value === 'cash') btn.textContent = 'Place Order (Cash)';
+    else if (this.value === 'bkash') btn.textContent = 'Place Order (Bkash)';
+    else btn.textContent = 'Place Order (Card)';
+  });
+});
+
+document.getElementById('placeOrderBtn').addEventListener('click', function() {
+  const addressId = getSelectedAddressId();
+  const paymentType = getSelectedPaymentType();
+  if (!addressId) {
+    alert('Please select a delivery address.');
+    return;
+  }
+  if (!paymentType) {
+    alert('Please select a payment method.');
+    return;
+  }
+  placeOrder(addressId, paymentType);
+});
+    </script>
+  </body>
+</html>

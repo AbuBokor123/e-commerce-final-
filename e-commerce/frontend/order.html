@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Orders - ShoeHub</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      .orders-container {
+        max-width: 1000px;     /* Increased from 1200px if you want even more width */
+        margin: 20px auto;
+        padding: 20px;
+      }
+
+      .order-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      /* Modern Order Card Styles */
+      .order-card-modern {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+        margin-bottom: 32px;
+        padding: 0 0 18px 0;
+        overflow: hidden;
+        transition: box-shadow 0.2s;
+        max-width: 900px;      /* Increased from 400px */
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .order-card-modern:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.13);
+      }
+      .order-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f7f7f7;
+        padding: 18px 24px 12px 24px;
+        border-bottom: 1px solid #eee;
+      }
+      .order-number {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #222;
+        margin-right: 18px;
+      }
+      .order-date {
+        color: #888;
+        font-size: 0.98rem;
+      }
+      .order-status {
+        padding: 5px 14px;
+        border-radius: 16px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        background: #e9ecef;
+        color: #333;
+        text-transform: capitalize;
+      }
+      .order-status.ordered {
+        background: #e3f2fd;
+        color: #1976d2;
+      }
+      .order-status.processing {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .order-status.shipped {
+        background: #d4edda;
+        color: #155724;
+      }
+      .order-status.delivered {
+        background: #d1ecf1;
+        color: #0c5460;
+      }
+      .order-products-list {
+        padding: 18px 24px 0 24px;
+        display: block;
+        overflow-x: unset;
+        gap: 0;
+      }
+      .order-product-row {
+        min-width: unset;
+        width: 100%;
+        background: #fafbfc;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        border: 1px solid #f0f0f0;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+      }
+      .order-product-row:last-child {
+        margin-right: 0;
+      }
+      .order-product-img img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #eee;
+        background: #fafafa;
+      }
+      .order-product-img {
+        margin-right: 18px;
+      }
+      .order-product-info {
+        flex: 1;
+      }
+      .order-product-title {
+        font-weight: 500;
+        color: #222;
+        margin-bottom: 4px;
+      }
+      .order-product-meta {
+        color: #666;
+        font-size: 0.97rem;
+        display: flex;
+        gap: 18px;
+      }
+      .order-product-price {
+        font-weight: 600;
+        color: #1976d2;
+        font-size: 1.08rem;
+        min-width: 70px;
+        text-align: right;
+      }
+      .order-summary-row {
+        background: #f7f7f7;
+        padding: 12px 24px;
+        border-top: 1px solid #eee;
+        font-size: 1.05rem;
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .order-summary-row span {
+        margin-right: 10px;
+        color: #555;
+      }
+      .order-total-price {
+        color: #ff523b;
+        font-size: 1.13rem;
+        margin-left: 8px;
+      }
+      .order-status-history {
+        padding: 10px 24px 0 24px;
+        font-size: 0.98rem;
+      }
+      .order-status-history ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .order-status-history li {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #eee;
+      }
+      .status-label {
+        font-weight: 500;
+        color: #333;
+      }
+      .status-date {
+        color: #888;
+        font-size: 0.9rem;
+        white-space: nowrap;
+      }
+      .status-admin {
+        font-size: 0.85rem;
+        color: #666;
+        margin-left: 5px;
+      }
+
+      .back-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #ff523b;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        margin-top: 20px;
+        transition: background 0.3s;
+      }
+
+      .back-btn:hover {
+        background: #ff0000;
+      }
+
+      .orders-scroll-x {
+        max-height: 500px;      /* Adjust height as needed */
+        overflow-y: auto;
+        overflow-x: unset;
+        padding-bottom: 10px;
+      }
+      .orders-list-flex {
+        display: block;
+        gap: 24px;
+        min-width: 100%;
+      }
+
+      .order-filter-bar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 18px;
+        padding-left: 8px;
+      }
+      .order-filter-btn {
+        background: #f7f7f7;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 22px;
+        font-size: 1rem;
+        color: #333;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+      }
+      .order-filter-btn.active,
+      .order-filter-btn:hover {
+        background: #1976d2;
+        color: #fff;
+      }
+
+      .orders-header-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 18px;
+      }
+      .orders-logo {
+        width: 80px;
+        margin-bottom: 8px;
+      }
+      .orders-header-center h2 {
+        color: #1976d2;
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: 1px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="container">
+      <div class="navbar">
+        <div class="logo">
+          <a href="index.html"><img src="images/logo-main.png" width="125px" /></a>
+        </div>
+        <nav>
+          <ul id="MenuItems">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="account.html">Account</a></li>
+          </ul>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 20px">
+          <a href="wishlist.html"><img src="images/wishlist.png" width="25px" height="25px" /></a>
+          <a href="cart.html"><img src="images/cart.png" width="25px" height="25px" /></a>
+        </div>
+        <img src="images/menu.png" class="menu-icon" onClick="menutoggle()" />
+      </div>
+    </div>
+
+    <!-- Orders Content -->
+    <div class="orders-container">
+      <div class="orders-header-center">
+        <h2>
+          <i class="bi bi-box-seam" style="font-size:2.2rem;vertical-align:middle;color:#1976d2;margin-right:10px;"></i>
+          My Orders
+        </h2>
+      </div>
+      <div class="order-filter-bar">
+        <button class="order-filter-btn active" data-status="all">All</button>
+        <button class="order-filter-btn" data-status="ordered">Ordered</button>
+        <button class="order-filter-btn" data-status="shipped">Shipped</button>
+        <button class="order-filter-btn" data-status="delivered">Delivered</button>
+      </div>
+      <div class="orders-scroll-x">
+        <div id="ordersList" class="orders-list-flex"></div>
+      </div>
+      <a href="dashboard.html" class="back-btn">
+        <i class="fa fa-arrow-left"></i> Back to Dashboard
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="footer-col-1">
+            <h3>Download Our App</h3>
+            <p>Download App for Android and ios mobile phone.</p>
+            <div class="app-logo">
+              <img src="images/play-store.png" alt />
+              <img src="images/app-store.png" alt />
+            </div>
+          </div>
+          <div class="footer-col-2">
+            <img src="images/logo-main.png" />
+            <p>
+              Our Purpose Is To Sustainably Make the Pleasure and Benefits of
+              Sports Accessible to the Many.
+            </p>
+          </div>
+          <div class="footer-col-3">
+            <h3>Useful Links</h3>
+            <ul>
+              <li>Coupons</li>
+              <li>Blog Post</li>
+              <li>Return Policy</li>
+              <li>Join Affiliate</li>
+            </ul>
+          </div>
+          <div class="footer-col-4">
+            <h3>Follow us</h3>
+            <ul>
+              <li>Facebook</li>
+              <li>Twitter</li>
+              <li>Instagram</li>
+              <li>Youtube</li>
+            </ul>
+          </div>
+        </div>
+        <hr />
+        <p class="copyright">Copyright 2025</p>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      // Toggle Menu
+      var MenuItems = document.getElementById("MenuItems");
+      MenuItems.style.maxHeight = "0px";
+      function menutoggle() {
+        if (MenuItems.style.maxHeight == "0px") {
+          MenuItems.style.maxHeight = "200px";
+        } else {
+          MenuItems.style.maxHeight = "0px";
+        }
+      }
+    </script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const ordersList = document.getElementById('ordersList');
+  const filterBar = document.querySelector('.order-filter-bar');
+  let allOrders = [];
+
+  const renderOrders = (orders) => {
+    if (!orders.length) {
+      ordersList.innerHTML = "<p>You have no orders yet.</p>";
+      return;
+    }
+    ordersList.innerHTML = orders.map(order => `
+      <div class="order-card-modern" style="cursor:pointer" onclick="window.location.href='order-details.html?order=${order.id}'">
+        <div class="order-card-header">
+          <div>
+            <span class="order-number">#${order.invoice_number}</span>
+            <span class="order-date">${new Date(order.date_time).toLocaleDateString()}</span>
+          </div>
+          <span class="order-status ${order.status.toLowerCase()}">${order.status}</span>
+        </div>
+        <div class="order-products-list">
+          ${order.products.map(item => `
+            <div class="order-product-row">
+              <div class="order-product-img">
+                <img src="${item.product_image && item.product_image !== 'null' ? 'http://localhost:8000/media/' + item.product_image.replace(/^\/?media\//, '') : 'images/product-1.jpg'}" alt="${item.product_name}" />
+              </div>
+              <div class="order-product-info">
+                <div class="order-product-title">${item.product_name}</div>
+                <div class="order-product-meta">
+                  <span>Size: <b>${item.size}</b></span>
+                  <span>Color: <b>${item.color}</b></span>
+                  <span>Qty: <b>${item.quantity}</b></span>
+                </div>
+              </div>
+              <div class="order-product-price">
+                $${Number(item.price).toFixed(2)}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="order-summary-row">
+          <div>
+            <span>Subtotal:</span> <b>$${order.subtotal.toFixed(2)}</b>
+            <span>Shipping:</span> <b>$${order.shipping_cost.toFixed(2)}</b>
+            <span>Discount:</span> <b>$${order.discount.toFixed(2)}</b>
+            <span>Total:</span> <b class="order-total-price">$${order.total.toFixed(2)}</b>
+          </div>
+        </div>
+        <div class="order-status-history">
+          <b>Status History:</b>
+          <ul>
+            ${order.status_history.map(s => `
+              <li>
+                <span class="status-label">${s.status}</span>
+                <span class="status-date">${new Date(s.date_time).toLocaleString()}</span>
+                ${s.admin_id ? '<span class="status-admin">(by admin)</span>' : ''}
+              </li>
+            `).join('')}
+          </ul>
+        </div>
+      </div>
+    `).join('');
+  };
+
+  // Fetch orders
+  const token = localStorage.getItem('access_token');
+  fetch('http://localhost:8000/api/user-orders/', {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(res => res.json())
+  .then(orders => {
+    allOrders = orders;
+    renderOrders(allOrders);
+  })
+  .catch(() => {
+    ordersList.innerHTML = "<p>Failed to load orders.</p>";
+  });
+
+  // Filter logic
+  document.querySelectorAll('.order-filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.order-filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const status = this.getAttribute('data-status');
+      if (status === 'all') {
+        renderOrders(allOrders);
+      } else {
+        renderOrders(allOrders.filter(order => order.status.toLowerCase() === status));
+      }
+    });
+  });
+});
+</script>
+  </body>
+</html>

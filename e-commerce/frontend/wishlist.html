@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Wishlist - ShoeHub</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      .wishlist-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+
+      .wishlist-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .wishlist-title {
+        font-size: 24px;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .wishlist-title i {
+        color: #ff523b;
+      }
+
+      .wishlist-filters {
+        display: flex;
+        gap: 15px;
+      }
+
+      .filter-select {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        min-width: 150px;
+      }
+
+      .wishlist-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 30px;
+      }
+
+      .wishlist-item {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: flex;
+        flex-direction: column;
+        min-height: 380px;
+      }
+
+      .wishlist-item:hover {
+        transform: translateY(-6px) scale(1.01);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.13);
+      }
+
+      .wishlist-item img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+      }
+
+      .wishlist-details {
+        flex: 1;
+        padding: 18px 18px 0 18px;
+      }
+
+      .wishlist-details h3 {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .wishlist-details p {
+        color: #666;
+        margin: 5px 0;
+      }
+
+      .price-container {
+        margin: 10px 0 0 0;
+      }
+
+      .current-price {
+        font-weight: 600;
+        color: #ff523b;
+        font-size: 18px;
+      }
+
+      .original-price {
+        text-decoration: line-through;
+        color: #999;
+        font-size: 14px;
+      }
+
+      .discount {
+        background: #ffebee;
+        color: #ff523b;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+      }
+
+      .wishlist-actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 15px 18px;
+        border-top: 1px solid #eee;
+        background: #fafafa;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+      }
+
+      .wishlist-status {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+      }
+
+      .status.in-stock {
+        background: #e6f7ed;
+        color: #00875a;
+      }
+
+      .status.out-of-stock {
+        background: #ffebee;
+        color: #d32f2f;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 10px;
+      }
+
+      .action-btn {
+        padding: 10px 18px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 500;
+        transition: background 0.2s, color 0.2s;
+      }
+
+      .btn-primary {
+        background: #ff523b;
+        color: white;
+      }
+
+      .btn-secondary {
+        background: #f8f8f8;
+        color: #333;
+      }
+
+      .btn-primary:hover {
+        background: #ff3d24;
+      }
+
+      .btn-secondary:hover {
+        background: #eee;
+      }
+
+      .empty-wishlist {
+        text-align: center;
+        padding: 40px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+
+      .empty-wishlist i {
+        font-size: 48px;
+        color: #ddd;
+        margin-bottom: 20px;
+      }
+
+      .empty-wishlist h2 {
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      .empty-wishlist p {
+        color: #666;
+        margin-bottom: 20px;
+      }
+
+      .btn-lg {
+        padding: 12px 25px;
+        font-size: 16px;
+      }
+
+      @media screen and (max-width: 768px) {
+        .wishlist-header {
+          flex-direction: column;
+          gap: 15px;
+        }
+
+        .wishlist-filters {
+          width: 100%;
+          flex-direction: column;
+        }
+
+        .filter-select {
+          width: 100%;
+        }
+
+        .wishlist-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wishlist-container">
+      <div class="wishlist-header">
+        <h1 class="wishlist-title"><i class="fa fa-heart"></i> My Wishlist</h1>
+        <div class="wishlist-filters">
+          <select class="filter-select">
+            <option value="">All Categories</option>
+            <option value="sneakers">Sneakers</option>
+            <option value="running">Running</option>
+            <option value="casual">Casual</option>
+            <option value="sports">Sports</option>
+          </select>
+          <select class="filter-select">
+            <option value="">All Status</option>
+            <option value="in-stock">In Stock</option>
+            <option value="out-of-stock">Out of Stock</option>
+          </select>
+          <select class="filter-select">
+            <option value="">Sort By</option>
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="price-low">Price: Low to High</option>
+          </select>
+        </div>
+      </div>
+      
+
+      <div class="wishlist-grid">
+        <!-- Wishlist items will be dynamically inserted here by JavaScript -->
+      </div>
+
+      <div class="empty-wishlist" style="display: none;">
+        <i class="fa fa-heart"></i>
+        <h2>Your Wishlist is Empty</h2>
+        <p>You haven't saved any items yet. Start shopping to add your favorite products!</p>
+        <a href="products.html" class="action-btn btn-primary btn-lg">Browse Products</a>
+      </div>
+    </div>
+
+    <script>
+      // Product data (should match products.html)
+      const allProducts = [
+        {id: '1', name: 'Downshifter Sports Shoes', image: 'images/product-11.jpg', price: 50.00},
+        {id: '2', name: 'Lace-Up Running Shoes', image: 'images/product-2.jpg', price: 35.00},
+        {id: '3', name: 'Lace Fastening Shoes', image: 'images/product-3.jpg', price: 15.00},
+        {id: '4', name: 'Flat Lace-Fastening Shoes', image: 'images/product-10.jpg', price: 48.00},
+        {id: '5', name: 'Flat Heel gray shoes', image: 'images/product-5.jpg', price: 50.00},
+        {id: '6', name: 'Lace-Fastening black Shoes', image: 'images/product-3.jpg', price: 21.00},
+        {id: '7', name: "HRX Men's cotton socks", image: 'images/product-7.jpg', price: 9.00},
+        {id: '8', name: 'Lace-Up Running Shoes', image: 'images/product-2.jpg', price: 35.00},
+        {id: '9', name: 'HRX cotton socks', image: 'images/product-7.jpg', price: 10.00},
+        {id: '10', name: 'Flat Lace-Fastening Shoes', image: 'images/product-10.jpg', price: 48.00},
+        {id: '11', name: 'Loafers Men (Gray)', image: 'images/product-11.jpg', price: 15.00},
+        {id: '12', name: 'Lace-Fastening white Shoes', image: 'images/product-12.jpg', price: 21.00}
+      ];
+
+      function renderWishlist() {
+        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const wishlistGrid = document.querySelector('.wishlist-grid');
+        const emptyWishlist = document.querySelector('.empty-wishlist');
+        if (wishlist.length === 0) {
+          wishlistGrid.innerHTML = '';
+          wishlistGrid.style.display = 'none';
+          emptyWishlist.style.display = 'block';
+          return;
+        }
+        wishlistGrid.style.display = 'grid';
+        emptyWishlist.style.display = 'none';
+        wishlistGrid.innerHTML = wishlist.map(id => {
+          const product = allProducts.find(p => p.id === id);
+          if (!product) return '';
+          return `
+            <div class="wishlist-item">
+              <img src="${product.image}" alt="${product.name}">
+              <div class="wishlist-details">
+                <h3>${product.name}</h3>
+                <div class="price-container">
+                  <span class="current-price">$${product.price.toFixed(2)}</span>
+                </div>
+              </div>
+              <div class="wishlist-actions">
+                <div class="action-buttons">
+                  <button class="action-btn btn-primary" onclick="addToCart('${product.id}')">Add to Cart</button>
+                  <button class="action-btn btn-secondary" onclick="removeFromWishlist('${product.id}')">Remove</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      function removeFromWishlist(id) {
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        wishlist = wishlist.filter(pid => pid !== id);
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        renderWishlist();
+      }
+
+      function addToCart(id) {
+        const product = allProducts.find(p => p.id === id);
+        if (!product) return;
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        // Check if already in cart
+        if (!cart.some(item => item.id === id)) {
+          cart.push(product);
+          localStorage.setItem('cart', JSON.stringify(cart));
+          alert('Added to cart!');
+        } else {
+          alert('Product is already in the cart.');
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', renderWishlist);
+    </script>
+
+    <!----------------------------------footer------------------------------------->
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="footer-col-1">
+            <h3>Download Our App</h3>
+            <p>Download App for Android and ios mobile phone.</p>
+            <div class="app-logo">
+              <img src="images/play-store.png" alt />
+              <img src="images/app-store.png" alt />
+            </div>
+          </div>
+          <div class="footer-col-2">
+            <img src="images/logo-main.png" />
+            <p>
+              Our Purpose Is To Sustainably Make the Pleasure and Benefits of
+              Sports Accessible to the Many.
+            </p>
+          </div>
+          <div class="footer-col-3">
+            <h3>Useful Links</h3>
+            <ul>
+              <li>Coupons</li>
+              <li>Blog Post</li>
+              <li>Return Policy</li>
+              <li>Join Affiliate</li>
+            </ul>
+          </div>
+          <div class="footer-col-4">
+            <h3>Follow us</h3>
+            <ul>
+              <li>Facebook</li>
+              <li>Twitter</li>
+              <li>Instagram</li>
+              <li>Youtube</li>
+            </ul>
+          </div>
+        </div>
+
+        <hr />
+        <!--horizontal line-->
+        <p class="copyright">Copyright 2025</p>
+      </div>
+    </div>
+  </body>
+</html>

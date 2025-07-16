@@ -1,0 +1,375 @@
+<link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+
+      /* Enhanced product card styles */
+      .col-4 {
+        position: relative;
+        padding: 15px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        margin-bottom: 30px;
+      }
+
+      .col-4:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .col-4 img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 15px;
+      }
+
+      .col-4 h4 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .col-4 .rating {
+        margin-bottom: 10px;
+      }
+
+      .col-4 .rating i {
+        color: #ff523b;
+        font-size: 14px;
+      }
+
+      .col-4 p {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      /* Wishlist icon styles */
+      .wishlist-icon {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .wishlist-icon i {
+        font-size: 24px;
+        color: #ccc;
+        transition: all 0.3s ease;
+      }
+
+      .wishlist-icon:hover i {
+        color: #ff523b;
+        transform: scale(1.1);
+      }
+
+      .wishlist-icon.active i {
+        color: #ff523b;
+      }
+
+      /* Search and filter styles */
+      .search-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 30px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-container input,
+      .search-container select {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+
+      .search-container input:focus,
+      .search-container select:focus {
+        border-color: #ff523b;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(255, 82, 59, 0.1);
+      }
+
+      .search-container input {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .search-container select {
+        min-width: 150px;
+      }
+
+      /* Page title styles */
+      .row-2 h2 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .row-2 h2::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: #ff523b;
+        border-radius: 3px;
+      }
+
+      .navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+.navbar-profile-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 10px rgba(25, 118, 210, 0.13), 0 0 0 3px #1976d2;
+  background: #fff;
+  display: block;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.profile-icon-fallback {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1976d2 60%, #42a5f5 100%);
+  border: 3px solid #fff;
+  box-shadow: 0 2px 10px rgba(25, 118, 210, 0.13), 0 0 0 3px #1976d2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.navbar-profile-img:hover,
+.profile-icon-fallback:hover {
+  box-shadow: 0 4px 18px rgba(25, 118, 210, 0.22), 0 0 0 3px #42a5f5;
+  transform: scale(1.07);
+  cursor: pointer;
+}
+.navbar-username {
+  font-weight: 600;
+  color: #222;
+  margin-right: 6px;
+  font-size: 1.08rem;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.navbar-dropdown {
+  position: relative;
+}
+.navbar-dropdown-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: #1976d2;
+  padding: 0 6px;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+.navbar-dropdown-btn:hover {
+  background: #e3f2fd;
+}
+.navbar-dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 120%;
+  background: #fff;
+  min-width: 190px;
+  box-shadow: 0 8px 32px rgba(25, 118, 210, 0.13);
+  border-radius: 14px;
+  z-index: 100;
+  padding: 10px 0;
+  animation: dropdownIn 0.18s;
+}
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-10px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+.navbar-dropdown-content a,
+.navbar-dropdown-content button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 22px;
+  color: #222;
+  text-decoration: none;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 1.08rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+  outline: none;
+}
+.navbar-dropdown-content a:hover,
+.navbar-dropdown-content button:hover {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+.navbar-dropdown-content .dropdown-divider {
+  height: 1px;
+  background: #f0f4f8;
+  margin: 7px 0;
+  border: none;
+}
+.navbar-dropdown.open .navbar-dropdown-content {
+  display: block;
+}
+.profile-icon-fallback i {
+  font-size: 2.1rem;
+  color: #fff;
+  margin: 0;
+}
+    </style>
+  </head>
+  <body>
+<div class="container">
+  <div class="navbar">
+    <div class="logo">
+      <a href="index.html"><img src="images/logo-main.png" width="125px" /></a>
+    </div>
+    <nav>
+      <ul id="MenuItems">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li id="accountNavItem"><a href="account.html">Account</a></li>
+      </ul>
+    </nav>
+    <div style="display: flex; align-items: center; gap: 20px">
+      <a href="wishlist.html" style="position: relative;">
+        <img src="images/w.jpg" width="25px" height="25px" />
+        <span id="wishlist-count" style="position: absolute; top: -8px; right: -8px; background: #ff523b; color: #fff; border-radius: 50%; padding: 2px 7px; font-size: 12px; font-weight: bold; display: none;">0</span>
+      </a>
+      <a href="cart.html">
+        <img src="images/cart.png" width="25px" height="25px" />
+      </a>
+      <!-- User Profile (hidden by default) -->
+      <div id="navbarUser" class="navbar-user" style="display:none; position:relative;">
+        <span id="navbarProfileImgWrapper" style="display:inline-block; position:relative;">
+          <img id="navbarProfileImg" class="navbar-profile-img" src="images/default-profile.png" alt="Profile" style="display:none;" />
+          <span id="navbarProfileIcon" class="profile-icon-fallback" style="display:none;">
+            <i class="bi bi-person-circle"></i>
+          </span>
+        </span>
+        <span id="navbarUsername" class="navbar-username"></span>
+        <div class="navbar-dropdown" id="navbarDropdown">
+          <button class="navbar-dropdown-btn" onclick="toggleNavbarDropdown(event)">
+            <i class="bi bi-chevron-down"></i>
+          </button>
+          <div class="navbar-dropdown-content">
+            <a href="profile.html"><i class="bi bi-person"></i> Profile</a>
+            <hr class="dropdown-divider">
+            <a href="order.html"><i class="bi bi-bag"></i> Order History</a>
+            <button onclick="logoutUser()"><i class="bi bi-box-arrow-right"></i> Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <img src="images/menu.png" class="menu-icon" onClick="menutoggle()" />
+  </div>
+</div>
+
+<script>
+function getCurrentUser() {
+  const name = localStorage.getItem('user_name');
+  const profile_img = localStorage.getItem('user_profile_img') || 'images/default-profile.png';
+  return name ? { name, profile_img } : null;
+}
+
+function showNavbarUser(user) {
+  document.getElementById('accountNavItem').style.display = 'none';
+  document.getElementById('navbarUser').style.display = 'flex';
+  document.getElementById('navbarUsername').textContent = user.name || 'User';
+
+  const img = document.getElementById('navbarProfileImg');
+  const iconWrapper = document.getElementById('navbarProfileIcon');
+  if (user.profile_img && user.profile_img !== 'images/default-profile.png') {
+    img.src = user.profile_img;
+    img.style.display = 'block';
+    iconWrapper.style.display = 'none';
+  } else {
+    img.style.display = 'none';
+    iconWrapper.style.display = 'flex';
+  }
+}
+
+function hideNavbarUser() {
+  document.getElementById('accountNavItem').style.display = '';
+  document.getElementById('navbarUser').style.display = 'none';
+}
+
+// Dropdown logic
+function toggleNavbarDropdown(e) {
+  e.stopPropagation();
+  document.getElementById('navbarDropdown').classList.toggle('open');
+}
+document.addEventListener('click', function() {
+  document.getElementById('navbarDropdown').classList.remove('open');
+});
+
+// Logout logic
+function logoutUser() {
+  localStorage.removeItem('user_name');
+  localStorage.removeItem('user_profile_img');
+  localStorage.removeItem('access_token');
+  window.location.href = "account.html";
+}
+
+// On page load
+document.addEventListener('DOMContentLoaded', function() {
+  const user = getCurrentUser();
+  if (user) {
+    showNavbarUser(user);
+  } else {
+    hideNavbarUser();
+  }
+});
+
+// Toggle menu for mobile
+function menutoggle() {
+  var menuItems = document.getElementById("MenuItems");
+  if (menuItems.style.maxHeight == "0px" || !menuItems.style.maxHeight) {
+    menuItems.style.maxHeight = "200px";
+  } else {
+    menuItems.style.maxHeight = "0px";
+  }
+}
+</script>

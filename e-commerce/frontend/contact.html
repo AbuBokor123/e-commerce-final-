@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - ShoeHub</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      /* Additional spacing styles */
+      .contact-hero {
+        padding: 80px 0 60px;
+      }
+
+      .contact-info-section {
+        padding: 60px 0;
+        background: #f9f9f9;
+      }
+
+      .contact-form-section {
+        padding: 80px 0;
+      }
+
+      .faq-section {
+        padding: 80px 0 60px;
+        background: #f9f9f9;
+      }
+
+      .contact-info-col {
+        padding: 30px;
+        margin: 15px 0;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .contact-form {
+        padding: 40px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .map-container {
+        padding: 40px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        height: 100%;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: "Poppins", sans-serif;
+      }
+
+      .form-group textarea {
+        min-height: 150px;
+      }
+
+      .btn {
+        padding: 12px 30px;
+        background: #ff523b;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background 0.3s;
+      }
+
+      .btn:hover {
+        background: #563434;
+      }
+
+      #formMessage {
+        margin-top: 20px;
+      }
+
+      .success-message {
+        color: #28a745;
+        font-weight: 500;
+      }
+
+      .faq-container {
+        margin-top: 40px;
+      }
+
+      .faq-item {
+        margin-bottom: 15px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .faq-question {
+        padding: 20px;
+        background: white;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .faq-question h3 {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .faq-question i {
+        transition: transform 0.3s;
+      }
+
+      .faq-question.active i {
+        transform: rotate(180deg);
+      }
+
+      .faq-answer {
+        padding: 0 20px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        background: #fafafa;
+      }
+
+      .faq-answer p {
+        padding: 20px 0;
+        margin: 0;
+      }
+
+      @media (max-width: 800px) {
+        .contact-form,
+        .map-container {
+          padding: 25px;
+        }
+
+        .contact-hero,
+        .contact-info-section,
+        .contact-form-section,
+        .faq-section {
+          padding: 50px 0;
+        }
+
+        .row {
+          flex-direction: column;
+        }
+
+        .col-2 {
+          flex-basis: 100%;
+          margin-bottom: 30px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <div class="container">
+      <div class="navbar">
+        <div class="logo">
+          <a href="index.html"
+            ><img src="images/logo-main.png" width="125px"
+          /></a>
+        </div>
+        <nav>
+          <ul id="MenuItems">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="account.html">Account</a></li>
+          </ul>
+        </nav>
+        <a href="cart.html"
+          ><img src="images/cart.png" width="30px" height="30px"
+        /></a>
+        <img src="images/menu.png" class="menu-icon" onClick="menutoggle()" />
+      </div>
+    </div>
+
+    <!-- Contact Hero Section -->
+    <div class="contact-hero">
+      <div class="container">
+        <h1>Get in Touch</h1>
+        <p>We'd love to hear from you. Here's how you can reach us.</p>
+      </div>
+    </div>
+
+    <!-- Contact Information Section -->
+    <div class="contact-info-section">
+      <div class="container">
+        <div class="row">
+          <div class="contact-info-col">
+            <i
+              class="fa fa-phone"
+              style="font-size: 30px; color: #ff523b; margin-bottom: 15px"
+            ></i>
+            <h3>Call Us</h3>
+            <p>01721254024</p>
+            <p>Sun-Wed, 9:00 AM - 6:00 PM</p>
+          </div>
+          <div class="contact-info-col">
+            <i
+              class="fa fa-envelope"
+              style="font-size: 30px; color: #ff523b; margin-bottom: 15px"
+            ></i>
+            <h3>Email Us</h3>
+            <p>support@shoehub.com</p>
+            <p>sales@shoehub.com</p>
+          </div>
+          <div class="contact-info-col">
+            <i
+              class="fa fa-map-marker"
+              style="font-size: 30px; color: #ff523b; margin-bottom: 15px"
+            ></i>
+            <h3>Visit Us</h3>
+            <p>Bagbari,Sylhet</p>
+            <p>Fashion District, NY 10001</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form Section -->
+     
+    <div class="contact-form-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-2">
+            <div class="contact-form">
+              <h2>Send us a Message</h2>
+              <form id="contactForm" onsubmit="return handleSubmit(event)">
+                <div class="form-group">
+                  <label for="name">Your Name</label>
+                  <input type="text" id="name" name="name" required />
+                </div>
+                <div class="form-group">
+                  <label for="email">Your Email</label>
+                  <input type="email" id="email" name="email" required />
+                </div>
+                <div class="form-group">
+                  <label for="subject">Subject</label>
+                  <input type="text" id="subject" name="subject" required />
+                </div>
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="5"
+                    required
+                  ></textarea>
+                </div>
+                <button type="submit" class="btn">Send Message</button>
+              </form>
+              <div id="formMessage"></div>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="map-container">
+              <h2>Our Location</h2>
+              <!-- Replace the src with your actual Google Maps embed code -->
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3618.664060767786!2d91.8681563150066!3d24.89962298402993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3750552a9a9ac4b5%3A0x7a0a4f8a3a4f8a3b!2sSylhet!5e0!3m2!1sen!2sbd!4v1620000000000!5m2!1sen!2sbd"
+                width="100%"
+                height="450"
+                style="border: 0"
+                allowfullscreen=""
+                loading="lazy"
+              >
+              </iframe>
+              <div style="margin-top: 20px">
+                <p><strong>Business Hours:</strong></p>
+                <p>Sun - Wed: 9:00 AM - 6:00 PM</p>
+                <p>Saturday: 10:00 AM - 12:00 PM</p>
+                <p>Friday: Closed</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+      <div class="container">
+        <h2 class="title">Frequently Asked Questions</h2>
+        <div class="faq-container">
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <h3>What are your shipping times?</h3>
+              <i class="fa fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>
+                We typically process and ship orders within 1-2 business days.
+                Standard shipping takes 3-5 business days, while express
+                shipping takes 1-2 business days.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <h3>What is your return policy?</h3>
+              <i class="fa fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>
+                We offer a 30-day return policy for unworn items in their
+                original packaging. Returns are free for store credit, or a
+                small fee applies for refunds.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <h3>Do you ship internationally?</h3>
+              <i class="fa fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>
+                Yes, we ship to most countries worldwide. International shipping
+                times vary by location, typically taking 7-14 business days.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <h3>How can I track my order?</h3>
+              <i class="fa fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>
+                Once your order is shipped, you'll receive a confirmation email
+                with a tracking number and link to track your package. You can
+                also track your order by logging into your account on our
+                website.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFaq(this)">
+              <h3>What payment methods do you accept?</h3>
+              <i class="fa fa-chevron-down"></i>
+            </div>
+            <div class="faq-answer">
+              <p>
+                We accept all major credit cards (Visa, MasterCard), PayPal,
+                Bkash ,Nagad. All transactions are secure and encrypted.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="footer-col-2">
+            <img src="images/logo-main.png" />
+            <p>
+              Our Purpose Is To Sustainably Make the Pleasure and Benefits of
+              Sports Accessible to the Many.
+            </p>
+          </div>
+          <div class="footer-col-3">
+            <h3>Useful Links</h3>
+            <ul>
+              <li>Coupons</li>
+              <li>Blog Post</li>
+              <li>Return Policy</li>
+              <li>Join Affiliate</li>
+            </ul>
+          </div>
+          <div class="footer-col-4">
+            <h3>Follow us</h3>
+            <ul>
+              <li>Facebook</li>
+              <li>Twitter</li>
+              <li>Instagram</li>
+              <li>Youtube</li>
+            </ul>
+          </div>
+        </div>
+        <hr />
+        <p class="copyright">Copyright 2025</p>
+      </div>
+    </div>
+
+    <script>
+      // Toggle Menu
+      var MenuItems = document.getElementById("MenuItems");
+      MenuItems.style.maxHeight = "0px";
+
+      function menutoggle() {
+        if (MenuItems.style.maxHeight == "0px") {
+          MenuItems.style.maxHeight = "200px";
+        } else {
+          MenuItems.style.maxHeight = "0px";
+        }
+      }
+
+      // Handle form submission
+      function handleSubmit(event) {
+        event.preventDefault();
+        const formMessage = document.getElementById("formMessage");
+
+        // Get form data
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const subject = document.getElementById("subject").value;
+        const message = document.getElementById("message").value;
+
+        // Here you would typically send this data to your server
+        // For demo purposes, we'll just show a success message
+        formMessage.innerHTML = `<p class="success-message">Thank you for your message, ${name}! We'll get back to you soon.</p>`;
+
+        // Clear form
+        document.getElementById("contactForm").reset();
+
+        return false;
+      }
+
+      // Toggle FAQ answers
+      function toggleFaq(element) {
+        const answer = element.nextElementSibling;
+        const icon = element.querySelector("i");
+
+        // Toggle active class
+        element.classList.toggle("active");
+
+        // Toggle icon
+        if (element.classList.contains("active")) {
+          icon.classList.remove("fa-chevron-down");
+          icon.classList.add("fa-chevron-up");
+          answer.style.maxHeight = answer.scrollHeight + "px";
+        } else {
+          icon.classList.remove("fa-chevron-up");
+          icon.classList.add("fa-chevron-down");
+          answer.style.maxHeight = "0px";
+        }
+      }
+    </script>
+  </body>
+</html>

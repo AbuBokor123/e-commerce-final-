@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Products - ShoeHub</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+      /* Enhanced product card styles */
+      #productsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 32px;
+}
+.col-4 {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 16px;
+  width: 220px;
+  text-align: center;
+}
+
+      .col-4:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .col-4 img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 15px;
+      }
+
+      .col-4 h4 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .col-4 .rating {
+        margin-bottom: 10px;
+      }
+
+      .col-4 .rating i {
+        color: #ff523b;
+        font-size: 14px;
+      }
+
+      .col-4 p {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      /* Wishlist icon styles */
+      .wishlist-icon {
+        position: relative;
+        display: inline-block;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .wishlist-icon i {
+        font-size: 24px;
+        color: #ccc;
+        transition: all 0.3s ease;
+      }
+
+      .wishlist-icon:hover i {
+        color: #ff523b;
+        transform: scale(1.1);
+      }
+
+      .wishlist-icon.active i {
+        color: #ff523b;
+      }
+
+      /* Search and filter styles */
+      .search-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 30px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-container input,
+      .search-container select {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: "Poppins", sans-serif;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+
+      .search-container input:focus,
+      .search-container select:focus {
+        border-color: #ff523b;
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(255, 82, 59, 0.1);
+      }
+
+      .search-container input {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .search-container select {
+        min-width: 150px;
+      }
+
+      /* Page title styles */
+      .row-2 h2 {
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .row-2 h2::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: #ff523b;
+        border-radius: 3px;
+      }
+
+      .navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+.navbar-profile-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #1976d2;
+  background: #eee;
+}
+.navbar-username {
+  font-weight: 500;
+  color: #222;
+  margin-right: 6px;
+  font-size: 1rem;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.navbar-dropdown {
+  position: relative;
+}
+.navbar-dropdown-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #1976d2;
+  padding: 0 6px;
+}
+.navbar-dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 120%;
+  background: #fff;
+  min-width: 160px;
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.09);
+  border-radius: 8px;
+  z-index: 100;
+  padding: 8px 0;
+}
+.navbar-dropdown-content a, .navbar-dropdown-content button {
+  display: block;
+  padding: 10px 18px;
+  color: #222;
+  text-decoration: none;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.navbar-dropdown-content a:hover, .navbar-dropdown-content button:hover {
+  background: #f0f4f8;
+  color: #1976d2;
+}
+.navbar-dropdown.open .navbar-dropdown-content {
+  display: block;
+}
+.profile-icon-fallback {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #eee;
+  display: inline;
+}
+
+/* Modern Product Card Styles */
+#productsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+  margin-top: 32px;
+}
+.product-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 22px 18px 18px 18px;
+  margin-bottom: 18px;
+  transition: box-shadow 0.18s, transform 0.18s;
+}
+.product-card:hover {
+  box-shadow: 0 8px 24px rgba(25, 118, 210, 0.13);
+  transform: translateY(-4px) scale(1.025);
+}
+.product-img-wrap {
+  width: 100%;
+  height: 170px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  background: #f8f8f8;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.product-img-wrap img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fff;
+}
+.product-info {
+  width: 100%;
+  text-align: center;
+}
+.product-info h4 {
+  font-size: 1.13rem;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  color: #222;
+  letter-spacing: 0.01em;
+}
+.product-meta {
+  font-size: 0.97rem;
+  color: #888;
+  margin-bottom: 10px;
+}
+.product-price {
+  font-size: 1.13rem;
+  font-weight: 700;
+  color: #1976d2;
+  margin-bottom: 14px;
+}
+.details-btn {
+  background: #ff523b;
+  color: #fff;
+  padding: 9px 22px;
+  border-radius: 7px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  border: none;
+  transition: background 0.18s;
+  display: inline-block;
+  margin-top: 6px;
+  cursor: pointer;
+}
+.details-btn:hover {
+  background: #d63b1a;
+}
+    </style>
+  </head>
+  <body>
+  <div class="container">
+        <div class="navbar">
+            <div class="logo">
+                <a href="index.html"><img src="images/logo-main.png" alt="ShoeHub Logo" width="125px" /></a>
+            </div>
+            <nav>
+                <ul id="MenuItems">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="account.html">Account</a></li>
+                </ul>
+            </nav>
+            <a href="cart.html"><img src="images/cart.png" width="30px" height="30px" alt="Cart" /></a>
+            <img src="images/menu.png" class="menu-icon" onClick="menutoggle()" alt="Menu Icon" />
+        </div>
+    </div>
+<div class="small-container">
+      <div class="row row-2" style="flex-direction: column; align-items: stretch;">
+        <h2 style="text-align: left; width: 100%;">All Products</h2>
+        <div class="top-search-bar" style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; justify-content: center; max-width: 600px; width: 100%; margin-left: auto; margin-right: auto;">
+          <input type="text" id="mainSearchInput" placeholder="Search products..." style="flex:1; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px;">
+          <button id="mainSearchBtn" style="padding: 12px 25px; background: #ff523b; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s;">Search</button>
+        </div>
+        <div class="search-container" style="display: flex; flex-wrap: nowrap; gap: 10px; justify-content: center; max-width: 900px; margin: 0 auto;">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search products..."
+            onkeyup="searchProducts()"
+            style="display:none;"
+          />
+          <select id="genderFilter">
+            <option value>All Genders</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Child">Child</option>
+          </select>
+          <select id="brandFilter" onchange="filterProducts()">
+            <option value>All Brands</option>
+            <option value="Nike">Nike</option>
+            <option value="Adidas">Adidas</option>
+            <option value="Puma">Puma</option>
+            <option value="HRX">HRX</option>
+            <option value="Reebok">Reebok</option>
+            <option value="Bata">Bata</option>
+            <option value="Woodland">Woodland</option>
+            <option value="Red Tape">Red Tape</option>
+            <option value="Sparx">Sparx</option>
+            <option value="Skechers">Skechers</option>
+            <option value="Fila">Fila</option>
+          </select>
+          <select id="categoryFilter" onchange="filterProducts()">
+            <option value>All Categories</option>
+            <option value="Shoes">Shoes</option>
+            <option value="Sneakers">Sneakers</option>
+            <option value="Formal">Formal</option>
+            <option value="Sports">Sports</option>
+            <option value="Boots">Boots</option>
+            <option value="Loafers">Loafers</option>
+            <option value="Sandals">Sandals</option>
+          </select>
+          <select id="priceFilter" onchange="filterProducts()">
+            <option value>All Prices</option>
+            <option value="0-20">$0 - $20</option>
+            <option value="21-50">$21 - $50</option>
+            <option value="51-100">$51 - $100</option>
+            <option value="101+">$101+</option>
+          </select>
+          <!-- <select id="sortFilter" onchange="filterProducts()">
+            <option value="default">Default sorting</option>
+            <option value="price-low">Sort by price: low to high</option>
+            <option value="price-high">Sort by price: high to low</option>
+            <option value="rating">Sort by rating</option>
+          </select> -->
+        </div>
+      </div>
+
+      <div id="noResultsMessage" style="display:none; text-align:center; margin:2em; color:#888;">
+        No products found for your criteria.
+      </div>
+      <div class="row" id="productsContainer">
+        <!-- Products will be injected here -->
+      </div>
+
+      
+    </div>
+
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="footer-col-1">
+            <h3>Download Our App</h3>
+            <p>Download App for Android and ios mobile phone.</p>
+            <div class="app-logo">
+              <img src="images/play-store.png" alt />
+              <img src="images/app-store.png" alt />
+            </div>
+          </div>
+          <div class="footer-col-2">
+            <img src="images/logo-main.png" />
+            <p>
+              Our Purpose Is To Sustainably Make the Pleasure and Benefits of
+              Sports Accessible to the Many.
+            </p>
+          </div>
+          <div class="footer-col-3">
+            <h3>Useful Links</h3>
+            <ul>
+              <li>Coupons</li>
+              <li>Blog Post</li>
+              <li>Return Policy</li>
+              <li>Join Affiliate</li>
+            </ul>
+          </div>
+          <div class="footer-col-4">
+            <h3>Follow us</h3>
+            <ul>
+              <li>Facebook</li>
+              <li>Twitter</li>
+              <li>Instagram</li>
+              <li>Youtube</li>
+            </ul>
+          </div>
+        </div>
+
+        <hr />
+        <!--horizontal line-->
+        <p class="copyright">Copyright 2025</p>
+      </div>
+    </div>
+
+    <script>
+      // Toggle menu
+      var menuItems = document.getElementById("MenuItems");
+      menuItems.style.maxHeight = "0px";
+
+      function menutoggle() {
+        if (menuItems.style.maxHeight == "0px") {
+          menuItems.style.maxHeight = "200px";
+        } else {
+          menuItems.style.maxHeight = "0px";
+        }
+      }
+
+      /// Wishlist functionality
+      function toggleWishlist(icon) {
+        icon.classList.toggle("active");
+        const productCard = icon.closest('.col-4');
+        const productId = productCard ? productCard.querySelector('a[href*="products-details.html"]').getAttribute('href').split('=')[1] : null;
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        if (icon.classList.contains("active")) {
+          // Add to wishlist if not already present
+          if (productId && !wishlist.includes(productId)) {
+            wishlist.push(productId);
+          }
+        } else {
+          // Remove from wishlist
+          if (productId) {
+            wishlist = wishlist.filter(id => id !== productId);
+          }
+        }
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        updateWishlistCount();
+      }
+
+      function updateWishlistCount() {
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const count = wishlist.length;
+        const countSpan = document.getElementById('wishlist-count');
+        countSpan.textContent = count;
+        countSpan.style.display = count > 0 ? 'inline-block' : 'none';
+      }
+
+      // On page load, mark wishlist icons as active if in localStorage
+      document.addEventListener('DOMContentLoaded', function() {
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        document.querySelectorAll('.col-4').forEach(card => {
+          const productId = card.querySelector('a[href*="products-details.html"]').getAttribute('href').split('=')[1];
+          if (wishlist.includes(productId)) {
+            card.querySelector('.wishlist-icon').classList.add('active');
+          }
+        });
+        updateWishlistCount();
+      });
+
+      // Product filtering and search functionality
+      function searchProducts() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toUpperCase();
+        const products = document.querySelectorAll(".col-4");
+
+        products.forEach((product) => {
+          const name = product.querySelector("h4").textContent;
+          if (name.toUpperCase().includes(filter)) {
+            product.style.display = "";
+          } else {
+            product.style.display = "none";
+          }
+        });
+      }
+
+      function filterProducts() {
+        const gender = document.getElementById("genderFilter").value;
+        const brand = document.getElementById("brandFilter").value;
+        const category = document.getElementById("categoryFilter").value;
+        const priceRange = document.getElementById("priceFilter").value;
+        const sort = document.getElementById("sortFilter").value;
+        const products = Array.from(document.querySelectorAll(".col-4"));
+
+        // Filter by gender, brand, category, and price
+        products.forEach((product) => {
+          const productGender = product.getAttribute("data-gender");
+          const productBrand = product.getAttribute("data-brand");
+          const productCategory = product.getAttribute("data-category");
+          const productPrice = parseFloat(product.getAttribute("data-price"));
+
+          const genderMatch = !gender || productGender === gender;
+          const brandMatch = !brand || productBrand === brand;
+          const categoryMatch = !category || productCategory === category;
+          let priceMatch = true;
+
+          if (priceRange) {
+            if (priceRange === "0-20") {
+              priceMatch = productPrice >= 0 && productPrice <= 20;
+            } else if (priceRange === "21-50") {
+              priceMatch = productPrice >= 21 && productPrice <= 50;
+            } else if (priceRange === "51-100") {
+              priceMatch = productPrice >= 51 && productPrice <= 100;
+            } else if (priceRange === "101+") {
+              priceMatch = productPrice > 100;
+            }
+          }
+
+          if (genderMatch && brandMatch && categoryMatch && priceMatch) {
+            product.style.display = "";
+          } else {
+            product.style.display = "none";
+          }
+        });
+
+        // Sort products
+        if (sort !== "default") {
+          const container = document.querySelector(
+            ".small-container .row:first-of-type"
+          );
+          const parent = container.parentNode;
+          const filteredProducts = products.filter(
+            (p) => p.style.display !== "none"
+          );
+
+          filteredProducts.sort((a, b) => {
+            if (sort === "price-low") {
+              return (
+                parseFloat(a.getAttribute("data-price")) -
+                parseFloat(b.getAttribute("data-price"))
+              );
+            } else if (sort === "price-high") {
+              return (
+                parseFloat(b.getAttribute("data-price")) -
+                parseFloat(a.getAttribute("data-price"))
+              );
+            } else if (sort === "rating") {
+              return (
+                parseFloat(b.getAttribute("data-rating")) -
+                parseFloat(a.getAttribute("data-rating"))
+              );
+            }
+            return 0;
+          });
+
+          // Reorganize products in the DOM
+          const rows = document.querySelectorAll(".small-container .row");
+          rows.forEach((row) => (row.innerHTML = ""));
+
+          filteredProducts.forEach((product, index) => {
+            const rowIndex = Math.floor(index / 4);
+            if (rows[rowIndex]) {
+              rows[rowIndex].appendChild(product);
+            }
+          });
+        }
+      }
+
+      // Custom search bar functionality
+      document.getElementById('mainSearchBtn').onclick = function() {
+        const value = document.getElementById('mainSearchInput').value.trim();
+        document.getElementById('searchInput').value = value;
+        searchProducts();
+      };
+      document.getElementById('mainSearchInput').addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+          document.getElementById('mainSearchBtn').click();
+        }
+      });
+
+      // Custom search bar functionality
+      document.getElementById('mainSearchBtn').onclick = function() {
+        const value = document.getElementById('mainSearchInput').value.trim();
+        document.getElementById('searchInput').value = value;
+        searchProducts();
+      };
+      document.getElementById('mainSearchInput').addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+          document.getElementById('mainSearchBtn').click();
+        }
+      });
+
+      let allProducts = [];
+
+      function renderProducts(products) {
+        const container = document.getElementById('productsContainer');
+        const noResults = document.getElementById('noResultsMessage');
+        if (!container) return;
+        if (!products.length) {
+          container.innerHTML = "";
+          if (noResults) noResults.style.display = "block";
+          return;
+        }
+        if (noResults) noResults.style.display = "none";
+        container.innerHTML = products.map(product => `
+          <div class="product-card">
+            <div class="product-img-wrap">
+              <a href="products-details.html?product=${product.id}">
+                <img src="${product.cover_image || 'https://ui-avatars.com/api/?name=Product'}" alt="${product.title}">
+              </a>
+            </div>
+            <div class="product-info">
+              <h4 title="${product.title}">${product.title}</h4>
+              <div class="product-meta">${product.category_name || ''}</div>
+              <div class="product-price">$${product.price}</div>
+              <a href="products-details.html?product=${product.id}" class="details-btn">View Details</a>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Fetch products from API
+      function fetchProducts() {
+        fetch('http://localhost:8000/api/products/')
+          .then(response => response.json())
+          .then(data => {
+            allProducts = data;
+            applyFilters();
+          })
+          .catch(error => {
+            console.error('Error fetching products:', error);
+            document.getElementById('productsContainer').innerHTML = "<p>Error loading products.</p>";
+          });
+      }
+
+      // Apply filters to allProducts and render
+      function applyFilters() {
+        let filtered = allProducts;
+
+        // Get filter values
+        const gender = document.getElementById("genderFilter").value;
+        const brand = document.getElementById("brandFilter").value;
+        const category = document.getElementById("categoryFilter").value;
+        const priceRange = document.getElementById("priceFilter").value;
+        const search = document.getElementById("mainSearchInput").value.trim().toLowerCase();
+
+        // Filter logic
+        if (gender && gender !== "All Genders") {
+          filtered = filtered.filter(p => (p.gender || "").toLowerCase() === gender.toLowerCase());
+        }
+        if (brand && brand !== "All Brands") {
+          filtered = filtered.filter(p => (p.brand_name || "").toLowerCase() === brand.toLowerCase());
+        }
+        if (category && category !== "All Categories") {
+          filtered = filtered.filter(p => (p.category_name || "").toLowerCase() === category.toLowerCase());
+        }
+        if (priceRange && priceRange !== "All Prices") {
+          if (priceRange === "101+") {
+            filtered = filtered.filter(p => parseFloat(p.price) > 100);
+          } else {
+            const [min, max] = priceRange.split('-').map(Number);
+            filtered = filtered.filter(p => parseFloat(p.price) >= min && parseFloat(p.price) <= max);
+          }
+        }
+        if (search) {
+          filtered = filtered.filter(p =>
+            (p.title || "").toLowerCase().includes(search) ||
+            (p.brand_name || "").toLowerCase().includes(search) ||
+            (p.category_name || "").toLowerCase().includes(search)
+          );
+        }
+
+        renderProducts(filtered);
+      }
+
+      // Event listeners for filters
+      ["genderFilter", "brandFilter", "categoryFilter", "priceFilter", "mainSearchInput"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('change', applyFilters);
+          el.addEventListener('input', applyFilters);
+        }
+      });
+      document.getElementById('mainSearchBtn').onclick = applyFilters;
+
+      // Wishlist functionality (unchanged)
+      function toggleWishlist(btn) {
+        btn.classList.toggle("active");
+        // ...your wishlist logic here...
+      }
+
+      document.addEventListener('DOMContentLoaded', fetchProducts);
+    </script>
+    <script>
+function getCurrentUser() {
+  const name = localStorage.getItem('user_name');
+  const profile_img = localStorage.getItem('user_profile_img') || 'images/default-profile.png';
+  return name ? { name, profile_img } : null;
+}
+
+
+
+function hideNavbarUser() {
+  var navbarUser = document.getElementById('navbarUser');
+  if (navbarUser) navbarUser.style.display = 'none';
+}
+
+// Dropdown logic
+function toggleNavbarDropdown(e) {
+  e.stopPropagation();
+  document.getElementById('navbarDropdown').classList.toggle('open');
+}
+document.addEventListener('click', function() {
+  document.getElementById('navbarDropdown').classList.remove('open');
+});
+
+// Logout logic
+function logoutUser() {
+  localStorage.removeItem('user_name');
+  localStorage.removeItem('user_profile_img');
+  localStorage.removeItem('access_token');
+  window.location.href = "account.html";
+}
+
+// On page load
+document.addEventListener('DOMContentLoaded', function() {
+  const user = getCurrentUser();
+  if (user) {
+    showNavbarUser(user);
+  } else {
+    hideNavbarUser();
+  }
+});
+</script>
+  </body>
+</html>

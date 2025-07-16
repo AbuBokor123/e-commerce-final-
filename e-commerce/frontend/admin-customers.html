@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customers Management - ShoeHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+        <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('access_token');
+    const userName = localStorage.getItem('user_name');
+    
+    if (!token) {
+        window.location.href = 'account.html';
+        return;
+    }
+    
+    // Update admin name in header
+    const adminNameElement = document.querySelector('.admin-profile span');
+    if (adminNameElement && userName) {
+        adminNameElement.textContent = userName;
+    }
+
+    // Add logout event listeners
+    const profileLogoutButton = document.getElementById('profileLogoutButton');
+    const profileDropdownLogout = document.querySelector('#profileDropdown a[href="#logout"]');
+
+    if (profileLogoutButton) {
+        profileLogoutButton.addEventListener('click', async function(e) {
+            e.preventDefault();
+            await logoutFromServer();
+        });
+    }
+
+    if (profileDropdownLogout) {
+        profileDropdownLogout.addEventListener('click', async function(e) {
+            e.preventDefault();
+            await logoutFromServer();
+        });
+    }
+});
+
+async function logoutFromServer() {
+    try {
+        const token = localStorage.getItem('access_token');
+        const refreshToken = localStorage.getItem('refresh_token');
+
+        if (token) {
+            const response = await fetch('http://localhost:8000/api/auth/logout/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    refresh_token: refreshToken
+                })
+            });
+
+            if (!response.ok) {
+                console.error('Logout failed:', await response.text());
+            }
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+    } finally {
+        // Clear all localStorage items
+        localStorage.clear();
+        // Redirect to login page
+        window.location.href = 'account.html';
+    }
+}
+    </script>
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="sidebar-header">
+          <img src="images/logo-main.png" alt="Logo" class="logo">
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-section">
+            <h3>MAIN MENU</h3>
+            <ul>
+              <li>
+                <a href="admin.html">
+                  <i class="fas fa-th-large"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="admin-products.html">
+                  <i class="fas fa-box"></i>
+                  Products
+                  <span class="badge">+28</span>
+                </a>
+              </li>
+              <li>
+                <a href="admin-orders.html">
+                  <i class="fas fa-shopping-cart"></i>
+                  Orders
+                  <span class="badge">+28</span>
+                </a>
+              </li>
+              <li class="has-submenu active" id="admin-submenu">
+                <button class="submenu-btn">
+                  <span>
+                    <i class="fas fa-users"></i>
+                    Users
+                  </span>
+                  <i class="fas fa-chevron-down submenu-toggle"></i>
+                </button>
+                <ul class="submenu">
+                  <li class="active">
+                    <a href="admin-customers.html">
+                      <i class="fas fa-user"></i>
+                      Customers
+                    </a>
+                  </li>
+                  <li>
+                    <a href="admin-admins.html">
+                      <i class="fas fa-user-shield"></i>
+                      Admins
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                                 <a href="#" id="profileLogoutButton" style="display: block; padding: 12px 20px; color: #e74c3c; text-decoration: none;">Logout</a>
+
+              </li>
+            </ul>
+          </div>
+
+          <div class="nav-section">
+            <h3>APPS</h3>
+            <ul>
+              <li>
+                <a href="admin-email.html">
+                  <i class="fas fa-envelope"></i>
+                  Email
+                </a>
+              </li>
+              <li>
+                <a href="admin-chat.html">
+                  <i class="fas fa-comments"></i>
+                  Chat
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="admin-main">
+        <header class="admin-header">
+          <div class="header-left">
+            <button id="sidebar-toggle">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+              <i class="fas fa-search"></i>
+              <input type="search" placeholder="Search customers..." />
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="header-actions">
+              <button class="action-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">5</span>
+              </button>
+              <button class="action-btn">
+                <i class="fas fa-envelope"></i>
+                <span class="notification-badge">3</span>
+              </button>
+            </div>
+            <div class="admin-profile">
+              <img src="images/adminicon.png" alt="Admin Avatar" />
+              <span>Kushal Panthadas</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="admin-content">
+          <div class="content-header" style="margin-bottom: 2rem;">
+            <h1>Customers Management</h1>
+            <button class="add-customer-btn" id="addCustomerBtn">
+              <i class="fas fa-plus"></i> Add New Customer
+            </button>
+          </div>
+
+          <!-- Customer Filters -->
+          <div class="product-filters">
+            <div class="filter-group">
+              <label for="status">Status:</label>
+              <select id="status">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="sort">Sort By:</label>
+              <select id="sort">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="name">Name</option>
+              </select>
+            </div>
+            <div class="product-search">
+              <i class="fas fa-search"></i>
+              <input type="text" placeholder="Search customers..." />
+            </div>
+          </div>
+
+          <!-- Customers Table -->
+          <div class="products-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Registration Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="product-pagination">
+            <button class="pagination-btn">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="pagination-btn active">1</button>
+            <button class="pagination-btn">2</button>
+            <button class="pagination-btn">3</button>
+            <span class="pagination-info">of 3 pages</span>
+            <button class="pagination-btn">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div class="product-modal" id="addCustomerModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add New Customer</h2>
+          <button class="modal-close" id="closeModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="addCustomerForm">
+            <div class="form-group">
+              <label for="customerName">Full Name</label>
+              <input type="text" id="customerName" name="customerName" required>
+            </div>
+            <div class="form-group">
+              <label for="customerEmail">Email</label>
+              <input type="email" id="customerEmail" name="customerEmail" required>
+            </div>
+            <div class="form-group">
+              <label for="customerPhone">Phone</label>
+              <input type="tel" id="customerPhone" name="customerPhone" required>
+            </div>
+            <div class="form-group">
+              <label for="customerAddress">Address</label>
+              <textarea id="customerAddress" name="customerAddress" required></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn cancel" id="cancelAdd">Cancel</button>
+          <button class="modal-btn save" id="saveCustomer">Save Customer</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+      // Load and display customers
+      async function loadCustomers() {
+          try {
+              const token = localStorage.getItem('access_token');
+              if (!token) {
+                  window.location.href = 'account.html';
+                  return;
+              }
+
+              // Get filter values
+              const status = document.getElementById('status').value;
+              const sort = document.getElementById('sort').value;
+              const search = document.querySelector('.product-search input').value;
+
+              // Build query parameters
+              const params = new URLSearchParams();
+              if (status) params.append('status', status);
+              if (sort) params.append('sort', sort);
+              if (search) params.append('search', search);
+
+              console.log('Fetching customers...'); // Debug log
+              const response = await fetch(`http://localhost:8000/api/customers/?${params.toString()}`, {
+                  headers: {
+                      'Authorization': `Bearer ${token}`
+                  }
+              });
+
+              if (!response.ok) {
+                  throw new Error(`HTTP error! status: ${response.status}`);
+              }
+
+              const customers = await response.json();
+              console.log('Received customers:', customers); // Debug log
+
+              const tableBody = document.querySelector('tbody');
+              tableBody.innerHTML = '';
+
+              if (customers.length === 0) {
+                  tableBody.innerHTML = `
+                      <tr>
+                          <td colspan="7" class="no-data">No customers found</td>
+                      </tr>
+                  `;
+                  return;
+              }
+
+customers.forEach(customer => {
+    const formattedDate = formatDate(customer.date_joined);
+    const row = `
+        <tr>
+            <td>#CUS-${String(customer.id).padStart(3, '0')}</td>
+            <td>
+                ${customer.first_name} ${customer.last_name}
+                ${isNewUser(customer.date_joined) ? '<span class="new-user-badge">New</span>' : ''}
+            </td>
+            <td>${customer.email}</td>
+            <td>${customer.phone || '-'}</td>
+            <td>${formattedDate}</td>
+            <td>
+                <span class="status ${customer.is_active ? 'active' : 'inactive'}">
+                    ${customer.is_active ? 'Active' : 'Inactive'}
+                </span>
+            </td>
+            <td>
+                <button class="action-btn" onclick="viewCustomer(${customer.id})" title="View Details">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="action-btn" onclick="editCustomer(${customer.id})" title="Edit Customer">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="action-btn delete" onclick="deleteCustomer(${customer.id})" title="Delete Customer">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    `;
+    tableBody.innerHTML += row;
+});
+          } catch (error) {
+              console.error('Error loading customers:', error);
+              const tableBody = document.querySelector('tbody');
+              tableBody.innerHTML = `
+                  <tr>
+                      <td colspan="7" class="error-message">Error loading customers: ${error.message}</td>
+                  </tr>
+              `;
+          }
+      }
+
+      // Helper function to check if user is new (registered within last 7 days)
+function isNewUser(dateString) {
+    if (!dateString) return false;
+    try {
+        const joinedDate = new Date(dateString);
+        if (isNaN(joinedDate.getTime())) return false;
+        
+        const now = new Date();
+        const diffTime = Math.abs(now - joinedDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays <= 7;
+    } catch (error) {
+        console.error('Date comparison error:', error);
+        return false;
+    }
+}
+
+      // Format date helper function
+      function formatDate(dateString) {
+          if (!dateString) return '-';
+          try {
+              const date = new Date(dateString);
+              if (isNaN(date.getTime())) return '-';
+              
+              return date.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+              });
+          } catch (error) {
+              console.error('Date formatting error:', error);
+              return '-';
+          }
+      }
+
+      // Add event listeners for filters
+      document.getElementById('status').addEventListener('change', loadCustomers);
+      document.getElementById('sort').addEventListener('change', loadCustomers);
+
+      // Add debounced search
+      let searchTimeout;
+      document.querySelector('.product-search input').addEventListener('input', function() {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(loadCustomers, 300);
+      });
+
+      // Load customers when page loads
+      document.addEventListener('DOMContentLoaded', function() {
+          const token = localStorage.getItem('access_token');
+          if (!token) {
+              window.location.href = 'account.html';
+              return;
+          }
+          loadCustomers();
+      });
+
+      // Customer management functions
+      async function deleteCustomer(id) {
+          if (!confirm('Are you sure you want to delete this customer?')) return;
+
+          try {
+              const response = await fetch(`http://localhost:8000/api/customers/${id}/`, {
+                  method: 'DELETE',
+                  headers: {
+                      'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                  }
+              });
+
+              if (response.ok) {
+                  loadCustomers();
+              } else {
+                  alert('Failed to delete customer');
+              }
+          } catch (error) {
+              console.error('Error deleting customer:', error);
+          }
+      }
+
+      // Add customer form submit handler
+      document.getElementById('addCustomerForm').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          try {
+              const formData = new FormData(this);
+              
+              const response = await fetch('http://localhost:8000/api/auth/register/', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                  },
+                  body: JSON.stringify({
+                      username: formData.get('customerEmail'),
+                      email: formData.get('customerEmail'),
+                      password: 'defaultPassword123', // You might want to generate this
+                      first_name: formData.get('customerName').split(' ')[0],
+                      last_name: formData.get('customerName').split(' ').slice(1).join(' '),
+                      phone: formData.get('customerPhone'),
+                      role: 'user'
+                  })
+              });
+
+              if (response.ok) {
+                  alert('Customer added successfully!');
+                  this.reset();
+                  document.getElementById('addCustomerModal').classList.remove('active');
+                  loadCustomers();
+              } else {
+                  const error = await response.json();
+                  alert('Failed to add customer: ' + JSON.stringify(error));
+              }
+          } catch (error) {
+              console.error('Error adding customer:', error);
+              alert('Error adding customer');
+          }
+      });
+
+      // Add this CSS for error and no-data states
+      const style = document.createElement('style');
+      style.textContent = `
+          .no-data, .error-message {
+              text-align: center;
+              padding: 20px;
+              color: #666;
+          }
+          .error-message {
+              color: #dc3545;
+          }
+          .new-user-badge {
+              background: #4CAF50;
+              color: white;
+              padding: 2px 6px;
+              border-radius: 12px;
+              font-size: 0.75rem;
+              margin-left: 8px;
+          }
+      `;
+      document.head.appendChild(style);
+
+      // Add these functions after your existing scripts
+      async function editCustomer(id) {
+          try {
+              const token = localStorage.getItem('access_token');
+              const response = await fetch(`http://localhost:8000/api/customers/${id}/`, {
+                  headers: {
+                      'Authorization': `Bearer ${token}`
+                  }
+              });
+
+              if (!response.ok) throw new Error('Failed to fetch customer data');
+
+              const customer = await response.json();
+              
+              // Populate the edit form
+              document.getElementById('customerName').value = `${customer.first_name} ${customer.last_name}`;
+              document.getElementById('customerEmail').value = customer.email;
+              document.getElementById('customerPhone').value = customer.phone || '';
+              document.getElementById('customerAddress').value = customer.address || '';
+              
+              // Store customer ID for update
+              document.getElementById('addCustomerForm').dataset.customerId = id;
+              
+              // Change modal title and button text
+              document.querySelector('.modal-header h2').textContent = 'Edit Customer';
+              document.getElementById('saveCustomer').textContent = 'Update Customer';
+              
+              // Show modal
+              document.getElementById('addCustomerModal').classList.add('active');
+          } catch (error) {
+              console.error('Error fetching customer:', error);
+              alert('Failed to load customer data');
+          }
+      }
+
+      async function deleteCustomer(id) {
+          if (!confirm('Are you sure you want to delete this customer?')) return;
+
+          try {
+              const token = localStorage.getItem('access_token');
+              const response = await fetch(`http://localhost:8000/api/customers/${id}/`, {
+                  method: 'DELETE',
+                  headers: {
+                      'Authorization': `Bearer ${token}`
+                  }
+              });
+
+              if (response.ok) {
+                  await loadCustomers(); // Refresh the table
+                  alert('Customer deleted successfully');
+              } else {
+                  const error = await response.json();
+                  throw new Error(error.detail || 'Failed to delete customer');
+              }
+          } catch (error) {
+              console.error('Error:', error);
+              alert(error.message);
+          }
+      }
+
+      // Update the form submit handler to handle both create and update
+      document.getElementById('addCustomerForm').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          try {
+              const token = localStorage.getItem('access_token');
+              const formData = new FormData(this);
+              const customerId = this.dataset.customerId;
+              const nameParts = formData.get('customerName').split(' ');
+              
+              const customerData = {
+                  first_name: nameParts[0],
+                  last_name: nameParts.slice(1).join(' '),
+                  email: formData.get('customerEmail'),
+                  phone: formData.get('customerPhone'),
+                  address: formData.get('customerAddress')
+              };
+
+              // If customerId exists, it's an update operation
+              const url = customerId 
+                  ? `http://localhost:8000/api/customers/${customerId}/`
+                  : 'http://localhost:8000/api/customers/';
+                  
+              const method = customerId ? 'PUT' : 'POST';
+
+              const response = await fetch(url, {
+                  method: method,
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                  },
+                  body: JSON.stringify(customerData)
+              });
+
+              if (response.ok) {
+                  alert(customerId ? 'Customer updated successfully!' : 'Customer added successfully!');
+                  this.reset();
+                  document.getElementById('addCustomerModal').classList.remove('active');
+                  await loadCustomers();
+              } else {
+                  const error = await response.json();
+                  throw new Error(error.detail || 'Operation failed');
+              }
+          } catch (error) {
+              console.error('Error:', error);
+              alert(error.message);
+          }
+      });
+
+      // Add modal open/close handlers
+      document.getElementById('addCustomerBtn').addEventListener('click', function() {
+          const form = document.getElementById('addCustomerForm');
+          form.reset();
+          delete form.dataset.customerId;
+          
+          document.querySelector('.modal-header h2').textContent = 'Add New Customer';
+          document.getElementById('saveCustomer').textContent = 'Save Customer';
+          
+          document.getElementById('addCustomerModal').classList.add('active');
+      });
+
+      document.getElementById('closeModal').addEventListener('click', function() {
+          document.getElementById('addCustomerModal').classList.remove('active');
+      });
+
+      document.getElementById('cancelAdd').addEventListener('click', function() {
+          document.getElementById('addCustomerModal').classList.remove('active');
+      });
+    </script>
+  </body>
+</html>

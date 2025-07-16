@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Product Details - Redstore</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <style>
+            /* Zoom functionality styles */
+            .zoom-container {
+                position: relative;
+                overflow: hidden;
+                cursor: zoom-in;
+            }
+
+            .zoom-icon {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: rgba(255, 255, 255, 0.9);
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                z-index: 2;
+                transition: all 0.3s ease;
+            }
+
+            .zoom-icon i {
+                color: #333;
+                font-size: 20px;
+            }
+
+            .zoom-icon:hover {
+                background: #ff523b;
+            }
+
+            .zoom-icon:hover i {
+                color: white;
+            }
+
+            .zoom-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: none;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            }
+
+            .zoomed-image {
+                max-width: 90%;
+                max-height: 90vh;
+                object-fit: contain;
+                transition: transform 0.3s ease;
+            }
+
+            .close-zoom {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                color: white;
+                font-size: 30px;
+                cursor: pointer;
+            }
+
+            /* Enhanced product details styles */
+            .single-product {
+                margin-top: 80px;
+            }
+
+            .single-product .col-2 img {
+                width: 100%;
+                padding: 0;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+
+            .single-product .col-2 {
+                padding: 20px;
+            }
+
+            .single-product h4 {
+                margin: 20px 0;
+                font-size: 22px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .single-product select {
+                display: block;
+                padding: 10px;
+                margin-top: 20px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                width: 100%;
+                max-width: 200px;
+            }
+
+            .single-product input {
+                width: 50px;
+                height: 40px;
+                padding-left: 10px;
+                font-size: 20px;
+                margin-right: 10px;
+                border: 1px solid #ff523b;
+                border-radius: 4px;
+            }
+
+            .single-product .fa {
+                color: #ff523b;
+                margin-left: 10px;
+            }
+
+            .small-img-row {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 20px;
+            }
+
+            .small-img-col {
+                flex-basis: 24%;
+                cursor: pointer;
+            }
+
+            .small-img-col img {
+                width: 100%;
+                border-radius: 4px;
+                transition: all 0.3s ease;
+            }
+
+            .small-img-col img:hover {
+                transform: scale(1.05);
+            }
+
+            .small-img-col.active img {
+                border: 2px solid #ff523b;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="container">
+                <div class="navbar">
+                    <div class="logo">
+                        <a href="index.html"><img src="images/logo-main.png"
+                                width="125px"></a>
+                    </div>
+                    <nav>
+                        <ul id="MenuItems">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="products.html">Products</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="account.html">Account</a></li>
+                        </ul>
+                    </nav>
+                    <a href="cart.html"><img src="images/cart.png" width="30px"
+                            height="30px"></a>
+                    <img src="images/menu.png" class="menu-icon"
+                        onClick="menutoggle()">
+                </div>
+            </div>
+        </div>
+
+        <div class="small-container single-product">
+          <div class="row">
+            <div class="col-2">
+              <img id="ProductImg" src="" alt="Product Image">
+              <div class="small-img-row" id="productThumbnails"></div>
+            </div>
+            <div class="col-2">
+              <p id="productCategory"></p>
+              <h1 id="productTitle"></h1>
+              <h4 id="productPrice"></h4>
+              <select id="sizeSelect">
+                <option>Select Size</option>
+              </select>
+              <select id="colorSelect">
+                <option>Select Color</option>
+              </select>
+              <input type="number" value="1" min="1" id="quantityInput">
+              <button class="btn" id="addToCartBtn">Add to Cart</button>
+              <h3>Product Details <i class="fa fa-indent"></i></h3>
+              <br>
+              <p id="productDescription"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="small-container">
+            <div class="row row-2">
+                <h2>Related Products</h2>
+                <a href="products.html"><p>View More</p></a>
+            </div>
+        </div>
+
+        <div class="small-container">
+            <div class="row" id="relatedProducts">
+                <!-- Related products will be added by JavaScript -->
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="footer-col-1">
+
+                    </div>
+                    <div class="footer-col-2">
+                        <img src="images/logo-main.png">
+                        <p>Our Purpose Is To Sustainably Make the Pleasure and
+                            Benefits of Sports Accessible to the Many.</p>
+                    </div>
+                    <div class="footer-col-3">
+                        <h3>Useful Links</h3>
+                        <ul>
+                            <li>Coupons</li>
+                            <li>Blog Post</li>
+                            <li>Return Policy</li>
+                            <li>Join Affiliate</li>
+                        </ul>
+                    </div>
+                    <div class="footer-col-4">
+                        <h3>Follow us</h3>
+                        <ul>
+                            <li>Facebook</li>
+                            <li>Twitter</li>
+                            <li>Instagram</li>
+                            <li>Youtube</li>
+                        </ul>
+                    </div>
+                </div>
+                <hr>
+                <p class="copyright">Copyright 2025</p>
+            </div>
+        </div>
+
+        <!-- Zoom overlay -->
+        <div class="zoom-overlay" id="zoomOverlay" style="display: none;">
+            <i class="fa fa-times close-zoom" onclick="closeZoom()"></i>
+            <img src="" class="zoomed-image" id="zoomedImage">
+        </div>
+
+        <!-- <div id="productDetailsContainer">
+          <h1 id="productTitle">Product Title</h1>
+          <img id="productImage" src="default.jpg" />
+          <p id="productPrice">$0.00</p>
+          <p id="productDescription">Product description will appear here.</p>
+         
+        </div> -->
+
+        <script>
+            // Toggle menu
+            var menuItems = document.getElementById("MenuItems");
+            menuItems.style.maxHeight = "0px";
+            
+            function menutoggle() {
+                if (menuItems.style.maxHeight == "0px") {
+                    menuItems.style.maxHeight = "200px";
+                } else {
+                    menuItems.style.maxHeight = "0px";
+                }
+            }
+
+            // ...existing code...
+
+            // Zoom functionality
+            function toggleZoom() {
+                const overlay = document.getElementById("zoomOverlay");
+                const zoomedImage = document.getElementById("zoomedImage");
+                const productImage = document.getElementById("ProductImg");
+
+                overlay.style.display = "flex";
+                zoomedImage.src = productImage.src;
+            }
+
+            function closeZoom() {
+                const overlay = document.getElementById("zoomOverlay");
+                overlay.style.display = "none";
+            }
+
+            // Close zoom when clicking outside the image
+            document.getElementById("zoomOverlay").addEventListener("click", function(e) {
+                if (e.target === this) {
+                    closeZoom();
+                }
+            });
+
+            // ...existing code...
+
+            // Utility to get product ID from URL (assume ?id=123)
+            function getProductIdFromUrl() {
+              const params = new URLSearchParams(window.location.search);
+              return params.get('id');
+            }
+
+            async function loadProductDetails() {
+              const productId = getProductIdFromUrl();
+              if (!productId) return;
+              const response = await fetch(`http://localhost:8000/api/products/${productId}/`);
+              if (!response.ok) return;
+              const product = await response.json();
+
+              // Set main info
+              document.getElementById('productTitle').textContent = product.title;
+              document.getElementById('productPrice').textContent = `$${product.price}`;
+              document.getElementById('productCategory').textContent = product.category?.title || '';
+              document.getElementById('productDescription').innerHTML = product.details;
+
+              // Subproducts
+              const subProducts = product.sub_products || [];
+              const colorSelect = document.getElementById('colorSelect');
+              const sizeSelect = document.getElementById('sizeSelect');
+              const thumbnailsRow = document.getElementById('productThumbnails');
+              const mainImg = document.getElementById('ProductImg');
+
+              // Populate color select
+              colorSelect.innerHTML = '<option>Select Color</option>' + subProducts.map(sp => `<option value="${sp.color}">${sp.color}</option>`).join('');
+              // Populate size select (unique sizes)
+              const uniqueSizes = [...new Set(subProducts.map(sp => sp.size))];
+              sizeSelect.innerHTML = '<option>Select Size</option>' + uniqueSizes.map(sz => `<option value="${sz}">${sz}</option>`).join('');
+
+              // Populate thumbnails
+              thumbnailsRow.innerHTML = '';
+              subProducts.forEach((sp, idx) => {
+                if (sp.image) {
+                  const thumb = document.createElement('div');
+                  thumb.className = 'small-img-col' + (idx === 0 ? ' active' : '');
+                  thumb.innerHTML = `<img src="${sp.image}" data-color="${sp.color}" style="width:100px; height:100px; object-fit:cover;">`;
+                  thumb.addEventListener('click', function() {
+                    mainImg.src = sp.image;
+                    // Highlight selected thumbnail
+                    thumbnailsRow.querySelectorAll('.small-img-col').forEach(el => el.classList.remove('active'));
+                    thumb.classList.add('active');
+                    // Also update color select
+                    colorSelect.value = sp.color;
+                  });
+                  thumbnailsRow.appendChild(thumb);
+                  if (idx === 0) mainImg.src = sp.image;
+                }
+              });
+
+              // Change main image when color is selected
+              colorSelect.addEventListener('change', function() {
+                const selectedColor = colorSelect.value;
+                const sp = subProducts.find(sp => sp.color === selectedColor);
+                if (sp && sp.image) {
+                  mainImg.src = sp.image;
+                  // Highlight corresponding thumbnail
+                  thumbnailsRow.querySelectorAll('.small-img-col').forEach(el => {
+                    const img = el.querySelector('img');
+                    if (img && img.getAttribute('data-color') === selectedColor) {
+                      el.classList.add('active');
+                    } else {
+                      el.classList.remove('active');
+                    }
+                  });
+                }
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', loadProductDetails);
+        </script>
+        <script src="js/products-details.js"></script>
+    </body>
+</html>

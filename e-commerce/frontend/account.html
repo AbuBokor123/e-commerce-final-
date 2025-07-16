@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account - ShoeHub</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      .flash-message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 5px;
+        color: white;
+        font-weight: 500;
+        z-index: 1000;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.3s ease;
+      }
+      .flash-message.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .flash-message.success {
+        background-color: #4CAF50;
+      }
+      .flash-message.error {
+        background-color: #f44336;
+      }
+      .btn:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+      .loading {
+        position: relative;
+        pointer-events: none;
+      }
+      .loading::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        left: 50%;
+        margin: -10px 0 0 -10px;
+        border: 3px solid #ffffff;
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: button-loading-spinner 1s linear infinite;
+      }
+      @keyframes button-loading-spinner {
+        from {
+          transform: rotate(0turn);
+        }
+        to {
+          transform: rotate(1turn);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Add flash message container -->
+    <div id="flashMessage" class="flash-message"></div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Check if this is first login
+        const isFirstLogin = localStorage.getItem("isFirstLogin");
+        const userRole = localStorage.getItem("user_role");
+        const accessToken = localStorage.getItem("access_token");
+
+        // If we have valid login data
+        if (accessToken && userRole) {
+          // If this is first login
+          if (isFirstLogin === "true") {
+            // Remove first login flag
+            localStorage.removeItem("isFirstLogin");
+            
+            // Redirect based on role
+            if (userRole === 'admin') {
+              window.location.href = "admin.html";
+            } else {
+              window.location.href = "index.html";
+            }
+          }
+        }
+      });
+    </script>
+    <div class="container">
+      <div class="navbar">
+        <div class="logo">
+          <a href="index.html"
+            ><img src="images/logo-main.png" width="125px" alt="ShoeHub Logo"
+          /></a>
+        </div>
+        <nav>
+          <ul id="MenuItems">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="account.html">Account</a></li>
+          </ul>
+        </nav>
+        <a href="cart.html"
+          ><img src="images/cart.png" width="30px" height="30px" alt="Cart"
+        /></a>
+        <img
+          src="images/menu.png"
+          class="menu-icon"
+          onClick="menutoggle()"
+          alt="Menu"
+        />
+      </div>
+    </div>
+
+    <div class="account-page">
+      <div class="container">
+        <div class="row">
+          <div class="col-2">
+            <img src="images/image1.png" width="100%" alt="Welcome Image" />
+          </div>
+          <div class="col-2">
+            <div class="form-container">
+              <div class="form-btn">
+                <span onclick="login()">Login</span>
+                <span onclick="register()">Register</span>
+                <hr id="Indicator" />
+              </div>
+
+<form id="LoginForm" onsubmit="loginUser(event)">
+                  <input
+                  type="email"
+                  id="loginEmail"
+                  placeholder="Email"
+                  required
+                />
+                <input
+                  type="password"
+                  id="loginPassword"
+                  placeholder="Password"
+                  required
+                />
+                <button type="submit" class="btn">Login</button>
+                <a href="request-otp.html">Forgot password?</a>
+              </form>
+
+              <form id="RegForm" onsubmit="return validateRegForm(event)">
+                <input
+                  type="text"
+                  id="regFullName"
+                  placeholder="Full Name"
+                  required
+                />
+                <input
+                  type="email"
+                  id="regEmail"
+                  placeholder="Email"
+                  required
+                />
+                <input
+                  type="password"
+                  id="regPassword"
+                  placeholder="Password"
+                  required
+                />
+                <button type="submit" class="btn">Register</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="footer-col-1">
+            <h3>Download Our App</h3>
+            <p>Download App for Android and iOS mobile phone.</p>
+            <div class="app-logo">
+              <img src="images/play-store.png" alt="Play Store" />
+              <img src="images/app-store.png" alt="App Store" />
+            </div>
+          </div>
+          <div class="footer-col-2">
+            <img src="images/logo-main.png" alt="ShoeHub Logo" />
+            <p>
+              Our Purpose Is To Sustainably Make the Pleasure and Benefits of
+              Sports Accessible to the Many.
+            </p>
+          </div>
+          <div class="footer-col-3">
+            <h3>Useful Links</h3>
+            <ul>
+              <li>Coupons</li>
+              <li>Blog Post</li>
+              <li>Return Policy</li>
+              <li>Join Affiliate</li>
+            </ul>
+          </div>
+          <div class="footer-col-4">
+            <h3>Follow us</h3>
+            <ul>
+              <li>Facebook</li>
+              <li>Twitter</li>
+              <li>Instagram</li>
+              <li>Youtube</li>
+            </ul>
+          </div>
+        </div>
+        <hr />
+        <p class="copyright">Copyright 2025</p>
+      </div>
+    </div>
+
+    <script>
+      var MenuItems = document.getElementById("MenuItems");
+      MenuItems.style.maxHeight = "0px";
+
+      function menutoggle() {
+        if (MenuItems.style.maxHeight == "0px") {
+          MenuItems.style.maxHeight = "200px";
+        } else {
+          MenuItems.style.maxHeight = "0px";
+        }
+      }
+
+      var LoginForm = document.getElementById("LoginForm");
+      var RegForm = document.getElementById("RegForm");
+      var Indicator = document.getElementById("Indicator");
+
+      function register() {
+        RegForm.style.transform = "translateX(0px)";
+        LoginForm.style.transform = "translateX(-300px)";
+        Indicator.style.transform = "translateX(100px)";
+      }
+
+      function login() {
+        RegForm.style.transform = "translateX(300px)";
+        LoginForm.style.transform = "translateX(0px)";
+        Indicator.style.transform = "translateX(0px)";
+      }
+
+      // Add flash message function
+      function showFlashMessage(message, type = 'success') {
+        const flashMessage = document.getElementById('flashMessage');
+        flashMessage.textContent = message;
+        flashMessage.className = `flash-message ${type} show`;
+        
+        // Hide message after 3 seconds
+        setTimeout(() => {
+          flashMessage.className = 'flash-message';
+        }, 3000);
+      }
+
+      // Add email validation function
+      function isValidGmail(email) {
+        const gmailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+        return gmailPattern.test(email);
+      }
+
+      async function loginUser(event) {
+        event.preventDefault();
+        const username = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+
+        // Validate Gmail
+        if (!isValidGmail(username)) {
+            showFlashMessage('Please use a valid Gmail address', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:8000/api/auth/login/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ 
+                    username: username, 
+                    password: password 
+                })
+            });
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                localStorage.setItem("access_token", data.access);
+                localStorage.setItem("refresh_token", data.refresh);
+                localStorage.setItem("user_role", data.role);
+                localStorage.setItem("user_name", `${data.first_name} ${data.last_name}`);
+                
+                showFlashMessage('Login successful! Redirecting...', 'success');
+                
+                setTimeout(() => {
+                    if (data.role === 'admin') {
+                        window.location.href = "admin.html";
+                    } else {
+                        window.location.href = "index.html";
+                    }
+                }, 1000);
+            } else {
+                localStorage.clear();
+                showFlashMessage(data.detail || 'Invalid credentials', 'error');
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            localStorage.clear();
+            showFlashMessage('Login failed due to an error', 'error');
+        }
+    }
+
+    // Add loading state management
+    function setLoading(button, isLoading) {
+      if (isLoading) {
+        button.disabled = true;
+        button.classList.add('loading');
+        button.textContent = 'Processing...';
+      } else {
+        button.disabled = false;
+        button.classList.remove('loading');
+        button.textContent = button.getAttribute('data-original-text') || 'Register';
+      }
+    }
+
+    async function validateRegForm(event) {
+        event.preventDefault();
+        const fullName = document.getElementById("regFullName").value;
+        const email = document.getElementById("regEmail").value;
+        const password = document.getElementById("regPassword").value;
+        const registerButton = event.target.querySelector('button[type="submit"]');
+
+        // Store original button text
+        if (!registerButton.getAttribute('data-original-text')) {
+          registerButton.setAttribute('data-original-text', registerButton.textContent);
+        }
+
+        // Validate Gmail
+        if (!isValidGmail(email)) {
+          showFlashMessage('Please use a valid Gmail address', 'error');
+          return;
+        }
+
+        // Set loading state
+        setLoading(registerButton, true);
+
+        try {
+            const response = await fetch("http://localhost:8000/api/auth/register/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username: email,
+                    email: email,
+                    password: password,
+                    first_name: fullName,
+                    role: 'user'
+                }),
+            });
+
+            const data = await response.json();
+            
+            if (response.ok) {
+                showFlashMessage('Registration successful! Please log in.', 'success');
+                setTimeout(() => {
+                    login();
+                }, 1000);
+            } else {
+                // Handle specific error messages
+                let errorMessage = 'Registration failed';
+                if (data.username) {
+                    errorMessage = 'This email is already registered';
+                } else if (data.email) {
+                    errorMessage = 'This email is already registered';
+                } else if (data.password) {
+                    errorMessage = 'Password is too weak';
+                } else if (data.detail) {
+                    errorMessage = data.detail;
+                }
+                showFlashMessage(errorMessage, 'error');
+            }
+        } catch (error) {
+            console.error("Registration error:", error);
+            showFlashMessage('Registration failed due to an error', 'error');
+        } finally {
+            // Reset loading state
+            setLoading(registerButton, false);
+        }
+    }
+
+    </script>
+  </body>
+</html>

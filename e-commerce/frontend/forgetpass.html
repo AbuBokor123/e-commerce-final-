@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forgot Password - ShoeHub</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .message-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .message {
+            padding: 15px 25px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            animation: slideIn 0.5s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 300px;
+            max-width: 80%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .message.success {
+            background-color: #4caf50;
+        }
+
+        .message.error {
+            background-color: #f44336;
+        }
+
+        .message .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            margin-left: 15px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .forgot-password-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .forgot-password-container h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password-container p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password-container input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .forgot-password-container button {
+            width: 100%;
+            padding: 10px;
+            background: #ff523b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .forgot-password-container button:hover {
+            background: #ff6b52;
+        }
+
+        .back-to-login {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .back-to-login a {
+            color: #ff523b;
+            text-decoration: none;
+        }
+
+        .back-to-login a:hover {
+            text-decoration: underline;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="message-container" id="messageContainer"></div>
+
+    <div class="container">
+      <div class="navbar">
+        <div class="logo">
+          <a href="index.html"
+            ><img src="images/logo-main.png" width="125px" alt="ShoeHub Logo"
+          /></a>
+        </div>
+        <nav>
+          <ul id="MenuItems">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="account.html">Account</a></li>
+          </ul>
+        </nav>
+        <a href="cart.html"
+          ><img src="images/cart.png" width="30px" height="30px" alt="Cart"
+        /></a>
+        <img
+          src="images/menu.png"
+          class="menu-icon"
+          onclick="menutoggle()"
+          alt="Menu"
+        />
+      </div>
+    </div>
+
+    <div class="forgot-password-container">
+      <h2>Forgot Password</h2>
+      <p>Enter your email address and we'll send you a link to reset your password.</p>
+      <form id="forgotPasswordForm" onsubmit="return handleForgotPassword(event)">
+        <input type="email" id="email" placeholder="Enter your email" required>
+        <button type="submit">Send Reset Link</button>
+      </form>
+      <div class="back-to-login">
+        <a href="account.html">Back to Login</a>
+      </div>
+    </div>
+
+    <script>
+      // Flash message function
+      function showMessage(message, type = "success") {
+        const messageContainer = document.getElementById("messageContainer");
+        const messageElement = document.createElement("div");
+        messageElement.className = `message ${type}`;
+        messageElement.innerHTML = `
+          <span>${message}</span>
+          <button class="close-btn" onclick="this.parentElement.remove()">&times;</button>
+        `;
+        messageContainer.appendChild(messageElement);
+        setTimeout(() => {
+          messageElement.remove();
+        }, 5000);
+      }
+
+      // Handle forgot password form submission
+      async function handleForgotPassword(event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value.trim();
+
+        try {
+          const response = await fetch("http://localhost:8000/api/auth/request-password-otp/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify({ email })
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.detail || "Failed to send reset link");
+          }
+
+          showMessage("Password reset link has been sent to your email", "success");
+          document.getElementById("forgotPasswordForm").reset();
+        } catch (error) {
+          showMessage(error.message, "error");
+        }
+
+        return false;
+      }
+
+      // Navbar toggle
+      var MenuItems = document.getElementById("MenuItems");
+      MenuItems.style.maxHeight = "0px";
+
+      function menutoggle() {
+        MenuItems.style.maxHeight = MenuItems.style.maxHeight === "0px" ? "200px" : "0px";
+      }
+    </script>
+  </body>
+</html>

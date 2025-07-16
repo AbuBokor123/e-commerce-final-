@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Details - ShoeHub</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      .order-details-container {
+        max-width: 900px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px rgba(25, 118, 210, 0.09);
+        padding: 40px 36px 32px 36px;
+        font-family: 'Poppins', sans-serif;
+        color: #222;
+      }
+
+      .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 28px;
+        border-bottom: 2px solid #f0f4f8;
+        padding-bottom: 18px;
+      }
+
+      .order-header h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #1976d2;
+        letter-spacing: 1px;
+      }
+
+      .order-header p {
+        margin: 0 0 6px 0;
+        color: #555;
+        font-size: 1.05rem;
+      }
+
+      .order-status {
+        display: inline-block;
+        padding: 7px 20px;
+        border-radius: 20px;
+        font-size: 1rem;
+        font-weight: 600;
+        background: #e3f2fd;
+        color: #1976d2;
+        margin-top: 8px;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.07);
+        text-transform: capitalize;
+      }
+
+      .order-status.shipped { background: #d4edda; color: #388e3c; }
+      .order-status.delivered { background: #fff3cd; color: #ff9800; }
+      .order-status.ordered { background: #e3f2fd; color: #1976d2; }
+
+      .order-details-section {
+        margin: 28px 0 0 0;
+        padding: 24px 0 0 0;
+        border-top: 1px solid #f0f4f8;
+      }
+
+      .order-details-section h3 {
+        font-size: 1.18rem;
+        font-weight: 600;
+        margin-bottom: 14px;
+        color: #1976d2;
+      }
+
+      .order-shipping {
+        margin-bottom: 24px;
+        background: #f7fafd;
+        border-radius: 8px;
+        padding: 16px 18px;
+        font-size: 1.05rem;
+        color: #444;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.03);
+      }
+
+      .order-products-list {
+        margin: 0 0 24px 0;
+      }
+
+      .order-product-row {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #f0f0f0;
+        padding: 16px 0;
+        background: #f9f9fb;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.03);
+      }
+
+      .order-product-img img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid #e3e3e3;
+        background: #fafafa;
+        margin-right: 18px;
+      }
+
+      .order-product-info {
+        flex: 1;
+      }
+
+      .order-product-title {
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 4px;
+        font-size: 1.08rem;
+      }
+
+      .order-product-meta {
+        color: #666;
+        font-size: 0.97rem;
+        display: flex;
+        gap: 18px;
+      }
+
+      .order-product-price {
+        font-weight: 700;
+        color: #1976d2;
+        font-size: 1.13rem;
+        min-width: 80px;
+        text-align: right;
+      }
+
+      .order-summary-row {
+        background: #f7fafd;
+        padding: 18px 24px;
+        border-radius: 8px;
+        font-size: 1.09rem;
+        margin-top: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        justify-content: flex-end;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.03);
+      }
+
+      .order-summary-row span {
+        margin-right: 8px;
+        color: #555;
+      }
+
+      .order-summary-row b {
+        margin-right: 18px;
+      }
+
+      .order-summary-row .order-total {
+        color: #ff523b;
+        font-size: 1.18rem;
+        margin-left: 8px;
+      }
+
+      .order-status-history {
+        margin-top: 28px;
+        background: #f7fafd;
+        border-radius: 8px;
+        padding: 16px 18px;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.03);
+      }
+
+      .order-status-history ul {
+        margin: 10px 0 0 0;
+        padding: 0 0 0 18px;
+      }
+
+      .order-status-history li {
+        margin-bottom: 6px;
+        color: #555;
+        font-size: 1.01rem;
+      }
+
+      .status-label {
+        font-weight: 600;
+        color: #1976d2;
+      }
+
+      .status-date {
+        color: #888;
+        margin-left: 8px;
+        font-size: 0.96em;
+      }
+
+      .status-admin {
+        color: #ff523b;
+        margin-left: 6px;
+        font-size: 0.95em;
+      }
+
+      @media (max-width: 700px) {
+        .order-details-container { padding: 10px; }
+        .order-header { flex-direction: column; align-items: flex-start; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="container">
+      <div class="navbar">
+        <div class="logo">
+          <a href="index.html"><img src="images/logo-main.png" width="125px" /></a>
+        </div>
+        <nav>
+          <ul id="MenuItems">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="account.html">Account</a></li>
+          </ul>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 20px">
+          <a href="wishlist.html"><img src="images/wishlist.png" width="25px" height="25px" /></a>
+          <a href="cart.html"><img src="images/cart.png" width="25px" height="25px" /></a>
+        </div>
+        <img src="images/menu.png" class="menu-icon" onClick="menutoggle()" />
+      </div>
+    </div>
+
+    <!-- Order Details Content -->
+    <div class="order-details-container" id="orderDetails"></div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="footer-col-1">
+            <h3>Download Our App</h3>
+            <p>Download App for Android and ios mobile phone.</p>
+            <div class="app-logo">
+              <img src="images/play-store.png" alt />
+              <img src="images/app-store.png" alt />
+            </div>
+          </div>
+          <div class="footer-col-2">
+            <img src="images/logo-main.png" />
+            <p>
+              Our Purpose Is To Sustainably Make the Pleasure and Benefits of
+              Sports Accessible to the Many.
+            </p>
+          </div>
+          <div class="footer-col-3">
+            <h3>Useful Links</h3>
+            <ul>
+              <li>Coupons</li>
+              <li>Blog Post</li>
+              <li>Return Policy</li>
+              <li>Join Affiliate</li>
+            </ul>
+          </div>
+          <div class="footer-col-4">
+            <h3>Follow us</h3>
+            <ul>
+              <li>Facebook</li>
+              <li>Twitter</li>
+              <li>Instagram</li>
+              <li>Youtube</li>
+            </ul>
+          </div>
+        </div>
+        <hr />
+        <p class="copyright">Copyright 2025</p>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      // Toggle Menu
+      var MenuItems = document.getElementById("MenuItems");
+      MenuItems.style.maxHeight = "0px";
+      function menutoggle() {
+        if (MenuItems.style.maxHeight == "0px") {
+          MenuItems.style.maxHeight = "200px";
+        } else {
+          MenuItems.style.maxHeight = "0px";
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get('order');
+  const token = localStorage.getItem('access_token');
+  const orderDetails = document.getElementById('orderDetails');
+  if (!orderId) {
+    orderDetails.innerHTML = "<p>Order not found.</p>";
+    return;
+  }
+  fetch(`http://localhost:8000/api/user-orders/?id=${orderId}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(res => res.json())
+  .then(order => {
+    if (!order || order.detail) {
+      orderDetails.innerHTML = "<p>Order not found.</p>";
+      return;
+    }
+    orderDetails.innerHTML = `
+      <div class="order-header">
+        <div>
+          <h2>Order #${order.invoice_number}</h2>
+          <p>Placed on ${new Date(order.date_time).toLocaleString()}</p>
+          <p>Status: <span class="order-status">${order.status}</span></p>
+        </div>
+        <div>
+          <b>Tracking:</b> ${order.tracking_number}<br>
+          <b>Payment:</b> ${order.payment_method}
+        </div>
+      </div>
+      <div>
+        <b>Shipping Address:</b><br>
+        ${order.shipping_address.address}, ${order.shipping_address.city}, ${order.shipping_address.state}, ${order.shipping_address.zip_code}, ${order.shipping_address.country}
+      </div>
+      <div class="order-products-list">
+        <h3>Products</h3>
+        ${order.products.map(item => `
+          <div class="order-product-row">
+            <div class="order-product-img">
+              <img src="${item.product_image && item.product_image !== 'null' ? 'http://localhost:8000/media/' + item.product_image.replace(/^\/?media\//, '') : 'images/product-1.jpg'}" alt="${item.product_name}" />
+            </div>
+            <div class="order-product-info">
+              <div class="order-product-title">${item.product_name}</div>
+              <div class="order-product-meta">
+                <span>Size: <b>${item.size}</b></span>
+                <span>Color: <b>${item.color}</b></span>
+                <span>Qty: <b>${item.quantity}</b></span>
+              </div>
+            </div>
+            <div class="order-product-price">
+              $${Number(item.price).toFixed(2)}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="order-summary-row">
+        <span>Subtotal:</span> <b>$${order.subtotal.toFixed(2)}</b>
+        <span>Shipping:</span> <b>$${order.shipping_cost.toFixed(2)}</b>
+        <span>Discount:</span> <b>$${order.discount.toFixed(2)}</b>
+        <span>Total:</span> <b style="color:#ff523b;">$${order.total.toFixed(2)}</b>
+      </div>
+      <div class="order-status-history">
+        <b>Status History:</b>
+        <ul>
+          ${order.status_history.map(s => `
+            <li>
+              <span class="status-label">${s.status}</span>
+              <span class="status-date">${new Date(s.date_time).toLocaleString()}</span>
+              ${s.admin_id ? '<span class="status-admin">(by admin)</span>' : ''}
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    `;
+  })
+  .catch(() => {
+    orderDetails.innerHTML = "<p>Failed to load order details.</p>";
+  });
+});
+    </script>
+  </body>
+</html>

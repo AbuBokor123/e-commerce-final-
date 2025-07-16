@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Tracking - ShoeHub</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      .tracking-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+      }
+
+      .tracking-header {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .tracking-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .info-card {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .info-card h3 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+
+      .info-card p {
+        color: #666;
+        margin: 5px 0;
+      }
+
+      .tracking-timeline {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+      }
+
+      .tracking-step {
+        display: flex;
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .tracking-step:not(:last-child):after {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 30px;
+        bottom: -20px;
+        width: 2px;
+        background: #ddd;
+      }
+
+      .step-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        z-index: 1;
+      }
+
+      .step-content {
+        flex: 1;
+      }
+
+      .tracking-step.completed .step-icon {
+        background: #4CAF50;
+        color: white;
+      }
+
+      .tracking-step.active .step-icon {
+        background: #ff523b;
+        color: white;
+      }
+
+      .step-date {
+        font-size: 12px;
+        color: #666;
+      }
+
+      .back-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #ff523b;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        margin-top: 20px;
+        transition: background 0.3s;
+      }
+
+      .back-btn:hover {
+        background: #ff0000;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="container">
+      <div class="navbar">
+        <div class="logo">
+          <a href="index.html"><img src="images/logo-main.png" width="125px" /></a>
+        </div>
+        <nav>
+          <ul id="MenuItems">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="account.html">Account</a></li>
+          </ul>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 20px">
+          <a href="wishlist.html"><img src="images/wishlist.png" width="25px" height="25px" /></a>
+          <a href="cart.html"><img src="images/cart.png" width="25px" height="25px" /></a>
+        </div>
+        <img src="images/menu.png" class="menu-icon" onClick="menutoggle()" />
+      </div>
+    </div>
+
+    <!-- Order Tracking Content -->
+    <div class="tracking-container">
+      <div class="tracking-header">
+        <h2>Order #12345</h2>
+        <p>Tracking Number: SH123456789</p>
+        <span class="status-badge">Shipped</span>
+      </div>
+
+      <div class="tracking-info">
+        <div class="info-card">
+          <h3>Shipping Information</h3>
+          <p>John Doe</p>
+          <p>123 Main Street</p>
+          <p>New York, NY 10001</p>
+          <p>United States</p>
+        </div>
+
+        <div class="info-card">
+          <h3>Estimated Delivery</h3>
+          <p>March 18, 2024</p>
+          <p>Standard Shipping</p>
+        </div>
+
+        <div class="info-card">
+          <h3>Order Details</h3>
+          <p>1 Item</p>
+          <p>Total: $137.00</p>
+          <p>Placed on: March 15, 2024</p>
+        </div>
+      </div>
+
+      <div class="tracking-timeline">
+        <h3>Order Progress</h3>
+        <div class="tracking-step completed">
+          <div class="step-icon"><i class="fa fa-check"></i></div>
+          <div class="step-content">
+            <h4>Order Placed</h4>
+            <p>Your order has been received</p>
+            <span class="step-date">2024-03-15 10:30 AM</span>
+          </div>
+        </div>
+        <div class="tracking-step completed">
+          <div class="step-icon"><i class="fa fa-check"></i></div>
+          <div class="step-content">
+            <h4>Processing</h4>
+            <p>Your order is being processed</p>
+            <span class="step-date">2024-03-15 11:45 AM</span>
+          </div>
+        </div>
+        <div class="tracking-step active">
+          <div class="step-icon"><i class="fa fa-truck"></i></div>
+          <div class="step-content">
+            <h4>Shipped</h4>
+            <p>Your order has been shipped</p>
+            <span class="step-date">2024-03-16 09:15 AM</span>
+          </div>
+        </div>
+        <div class="tracking-step">
+          <div class="step-icon"><i class="fa fa-home"></i></div>
+          <div class="step-content">
+            <h4>Delivered</h4>
+            <p>Your order will be delivered soon</p>
+            <span class="step-date">Expected: 2024-03-18</span>
+          </div>
+        </div>
+      </div>
+
+      <a href="dashboard.html" class="back-btn">
+        <i class="fa fa-arrow-left"></i> Back to Dashboard
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="footer-col-1">
+            <h3>Download Our App</h3>
+            <p>Download App for Android and ios mobile phone.</p>
+            <div class="app-logo">
+              <img src="images/play-store.png" alt />
+              <img src="images/app-store.png" alt />
+            </div>
+          </div>
+          <div class="footer-col-2">
+            <img src="images/logo-main.png" />
+            <p>
+              Our Purpose Is To Sustainably Make the Pleasure and Benefits of
+              Sports Accessible to the Many.
+            </p>
+          </div>
+          <div class="footer-col-3">
+            <h3>Useful Links</h3>
+            <ul>
+              <li>Coupons</li>
+              <li>Blog Post</li>
+              <li>Return Policy</li>
+              <li>Join Affiliate</li>
+            </ul>
+          </div>
+          <div class="footer-col-4">
+            <h3>Follow us</h3>
+            <ul>
+              <li>Facebook</li>
+              <li>Twitter</li>
+              <li>Instagram</li>
+              <li>Youtube</li>
+            </ul>
+          </div>
+        </div>
+        <hr />
+        <p class="copyright">Copyright 2025</p>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+      // Toggle Menu
+      var MenuItems = document.getElementById("MenuItems");
+      MenuItems.style.maxHeight = "0px";
+      function menutoggle() {
+        if (MenuItems.style.maxHeight == "0px") {
+          MenuItems.style.maxHeight = "200px";
+        } else {
+          MenuItems.style.maxHeight = "0px";
+        }
+      }
+    </script>
+  </body>
+</html> 

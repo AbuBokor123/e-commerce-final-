@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orders Management - ShoeHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+            <script>
+    // Declare global filter/pagination variables
+    let rowsPerPage = 5;
+    let currentPage = 1;
+    let currentSearch = '';
+    let currentStatus = 'all orders';
+    window.ordersData = [];
+
+    function getFilteredData() {
+      return window.ordersData.filter(order => {
+        const statusMatch = (currentStatus === 'all orders' || String(order.status).toLowerCase().includes(currentStatus));
+        const searchMatch = (
+          String(order.id).toLowerCase().includes(currentSearch) ||
+          String(order.customer).toLowerCase().includes(currentSearch) ||
+          String(order.products).toLowerCase().includes(currentSearch) ||
+          String(order.date).toLowerCase().includes(currentSearch) ||
+          String(order.amount).toLowerCase().includes(currentSearch) ||
+          String(order.status).toLowerCase().includes(currentSearch)
+        );
+        return statusMatch && searchMatch;
+      });
+    }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('access_token');
+    const userName = localStorage.getItem('user_name');
+    if (!token) {
+      window.location.href = 'account.html';
+      return;
+    }
+    // Update admin name in header
+    const adminNameElement = document.querySelector('.admin-profile span');
+    if (adminNameElement && userName) {
+      adminNameElement.textContent = userName;
+    }
+    // Add logout event listeners
+    const profileLogoutButton = document.getElementById('profileLogoutButton');
+    const profileDropdownLogout = document.querySelector('#profileDropdown a[href="#logout"]');
+    if (profileLogoutButton) {
+      profileLogoutButton.addEventListener('click', async function(e) {
+        e.preventDefault();
+        await logoutFromServer();
+      });
+    }
+    if (profileDropdownLogout) {
+      profileDropdownLogout.addEventListener('click', async function(e) {
+        e.preventDefault();
+        await logoutFromServer();
+      });
+    }
+
+    // Fetch all orders for admin
+    window.ordersData = [];
+    async function fetchOrders() {
+      try {
+        const response = await fetch('http://localhost:8000/api/orders/', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error('Failed to fetch orders');
+        const orders = await response.json();
+        window.ordersData = orders.map(order => ({
+          id: order.id,
+          customer: order.user_name || order.user_id,
+          products: order.products ? order.products.map(p => p.product_name).join(', ') : '',
+          date: order.date_time ? new Date(order.date_time).toLocaleDateString() : '',
+          amount: `$${order.total}`,
+          status: order.status,
+        }));
+        renderTable();
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+        window.ordersData = [];
+        renderTable();
+      }
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function renderTablePage(page, data) {
+      const tbody = document.getElementById('orders-tbody');
+      tbody.innerHTML = '';
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      data.slice(start, end).forEach(order => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${order.id}</td>
+            <td>${order.customer}</td>
+            <td>${order.products}</td>
+            <td>${order.date}</td>
+            <td>${order.amount}</td>
+            <td><span class="status ${order.status}">${capitalize(order.status)}</span></td>
+          </tr>
+        `;
+      });
+    }
+
+    function renderPagination(data) {
+      const pagination = document.getElementById('pagination');
+      const pageCount = Math.ceil(data.length / rowsPerPage);
+      pagination.innerHTML = '';
+      for (let i = 1; i <= pageCount; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.className = (i === currentPage) ? 'active' : '';
+        btn.style.margin = '0';
+        btn.style.padding = '10px 22px';
+        btn.style.borderRadius = '7px';
+        btn.style.border = '1px solid #ddd';
+        btn.style.background = (i === currentPage) ? '#007bff' : '#fff';
+        btn.style.color = (i === currentPage) ? '#fff' : '#333';
+        btn.style.fontWeight = '500';
+        btn.style.fontSize = '1.08rem';
+        btn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
+        btn.style.cursor = 'pointer';
+        btn.style.transition = 'background 0.2s, color 0.2s, box-shadow 0.2s';
+        btn.onmouseover = function() {
+          if (i !== currentPage) {
+            btn.style.background = '#f0f4ff';
+            btn.style.color = '#007bff';
+            btn.style.boxShadow = '0 4px 16px rgba(0,123,255,0.08)';
+          }
+        };
+        btn.onmouseout = function() {
+          btn.style.background = (i === currentPage) ? '#007bff' : '#fff';
+          btn.style.color = (i === currentPage) ? '#fff' : '#333';
+          btn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
+        };
+        btn.addEventListener('click', function() {
+          currentPage = i;
+          renderTable();
+        });
+        pagination.appendChild(btn);
+      }
+    }
+
+    function renderTable() {
+      const filtered = getFilteredData();
+      if (currentPage > Math.ceil(filtered.length / rowsPerPage)) currentPage = 1;
+      renderTablePage(currentPage, filtered);
+      renderPagination(filtered);
+    }
+
+    fetchOrders();
+  });
+
+  async function logoutFromServer() {
+    try {
+      const token = localStorage.getItem('access_token');
+      const refreshToken = localStorage.getItem('refresh_token');
+      if (token) {
+        const response = await fetch('http://localhost:8000/api/auth/logout/', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ refresh_token: refreshToken })
+        });
+        if (!response.ok) {
+          console.error('Logout failed:', await response.text());
+        }
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.clear();
+      window.location.href = 'account.html';
+    }
+  }
+    </script>
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="sidebar-header">
+          <img src="images/logo-main.png" alt="Logo" class="logo">
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-section">
+            <h3>MAIN MENU</h3>
+            <ul>
+              <li>
+                <a href="admin.html">
+                  <i class="fas fa-th-large"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="admin-products.html">
+                  <i class="fas fa-box"></i>
+                  Products
+                  <span class="badge">+28</span>
+                </a>
+              </li>
+              <li class="active">
+                <a href="admin-orders.html">
+                  <i class="fas fa-shopping-cart"></i>
+                  Orders
+                  <span class="badge">+28</span>
+                </a>
+              </li>
+                            <li>
+                <a href="admin-analytics.html">
+                  <i class="fas fa-chart-line"></i>
+                  Analytics
+                </a>
+              </li>
+              <li>
+                <!-- <a href="admin-revenue.html">
+                  <i class="fas fa-dollar-sign"></i>
+                  Revenue
+                </a> -->
+             
+              </li>
+
+              <li class="has-submenu" id="admin-submenu">
+                <button class="submenu-btn">
+                  <span>
+                    <i class="fas fa-users"></i>
+                    Users
+                  </span>
+                  <i class="fas fa-chevron-down submenu-toggle"></i>
+                </button>
+                <ul class="submenu">
+                  <li>
+                    <a href="admin-customers.html">
+                      <i class="fas fa-user"></i>
+                      Customers
+                    </a>
+                  </li>
+                  <li>
+                    <a href="admin-admins.html">
+                      <i class="fas fa-user-shield"></i>
+                      Admins
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                 <a href="#" id="profileLogoutButton" style="display: block; padding: 12px 20px; color: #e74c3c; text-decoration: none;">Logout</a>
+
+              </li>
+            </ul>
+          </div>
+          <div class="nav-section">
+            <h3>APPS</h3>
+            <ul>
+              <li>
+                <a href="admin-email.html">
+                  <i class="fas fa-envelope"></i>
+                  Email
+                </a>
+              </li>
+              <li>
+                <a href="admin-chat.html">
+                  <i class="fas fa-comments"></i>
+                  Chat
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="admin-main">
+        <header class="admin-header">
+          <div class="header-left">
+            <button id="sidebar-toggle">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+              <i class="fas fa-search"></i>
+              <input type="search" placeholder="Search orders..." class="search-input" />
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="header-actions">
+              <button class="action-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">5</span>
+              </button>
+              <button class="action-btn">
+                <i class="fas fa-envelope"></i>
+                <span class="notification-badge">3</span>
+              </button>
+            </div>
+            <div class="admin-profile">
+              <img src="images/adminicon.png" alt="Admin Avatar" />
+              <span>Kushal Panthadas</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="admin-content">
+          <div class="content-header" style="margin-bottom: 32px;">
+            <h1>Orders Management</h1>
+          </div>
+
+          <div class="order-filters" style="max-width: 700px; margin: 0 auto 32px auto; padding: 28px 32px; background: #f9f9f9; border-radius: 12px; display: flex; gap: 24px; align-items: center; justify-content: center;">
+            <select class="filter-select" style="height: 48px; font-size: 1.1rem; min-width: 180px; padding: 0 16px; border-radius: 6px; border: 1px solid #ddd;">
+              <option>All Orders</option>
+              <option>Processing</option>
+              <option>Shipped</option>
+              <option>Delivered</option>
+              <option>Cancelled</option>
+              <option>Returned</option>
+              <option>Pending</option>
+              <option>Completed</option>
+            </select>
+            <input
+              type="text"
+              placeholder="Search orders..."
+              class="search-input"
+              style="height: 48px; font-size: 1.1rem; min-width: 220px; padding: 0 16px; border-radius: 6px; border: 1px solid #ddd;"
+            />
+          </div>
+
+          <div class="products-table">
+            <table>
+              <thead>
+                <tr style="background:#f5f5f5;">
+                  <th style="padding:10px; border:1px solid #eee;">Order ID</th>
+                  <th style="padding:10px; border:1px solid #eee;">Customer</th>
+                  <th style="padding:10px; border:1px solid #eee;">Product(s)</th>
+                  <th style="padding:10px; border:1px solid #eee;">Date</th>
+                  <th style="padding:10px; border:1px solid #eee;">Amount</th>
+                  <th style="padding:10px; border:1px solid #eee;">Status</th>
+                </tr>
+              </thead>
+              <tbody id="orders-tbody">
+                <!-- Static order data will be inserted here -->
+              </tbody>
+            </table>
+            <div id="pagination" style="display: flex; justify-content: center; margin: 32px auto 40px auto; gap: 14px;"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+       
+        const rowsPerPage = 5;
+        let currentPage = 1;
+        let currentSearch = '';
+        let currentStatus = 'all orders';
+
+        const tbody = document.getElementById('orders-tbody');
+        const searchInput = document.querySelector('.search-input');
+        const filterSelect = document.querySelector('.filter-select');
+        const pagination = document.getElementById('pagination');
+
+        function renderTablePage(page, data) {
+          tbody.innerHTML = '';
+          const start = (page - 1) * rowsPerPage;
+          const end = start + rowsPerPage;
+          data.slice(start, end).forEach(order => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${order.id}</td>
+                <td>${order.customer}</td>
+                <td>${order.products}</td>
+                <td>${order.date}</td>
+                <td>${order.amount}</td>
+                <td><span class="status ${order.status}">${capitalize(order.status)}</span></td>
+              </tr>
+            `;
+          });
+        }
+
+        function renderPagination(data) {
+          const pageCount = Math.ceil(data.length / rowsPerPage);
+          pagination.innerHTML = '';
+          for (let i = 1; i <= pageCount; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            btn.className = (i === currentPage) ? 'active' : '';
+            btn.style.margin = '0';
+            btn.style.padding = '10px 22px';
+            btn.style.borderRadius = '7px';
+            btn.style.border = '1px solid #ddd';
+            btn.style.background = (i === currentPage) ? '#007bff' : '#fff';
+            btn.style.color = (i === currentPage) ? '#fff' : '#333';
+            btn.style.fontWeight = '500';
+            btn.style.fontSize = '1.08rem';
+            btn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
+            btn.style.cursor = 'pointer';
+            btn.style.transition = 'background 0.2s, color 0.2s, box-shadow 0.2s';
+            btn.onmouseover = function() {
+              if (i !== currentPage) {
+                btn.style.background = '#f0f4ff';
+                btn.style.color = '#007bff';
+                btn.style.boxShadow = '0 4px 16px rgba(0,123,255,0.08)';
+              }
+            };
+            btn.onmouseout = function() {
+              btn.style.background = (i === currentPage) ? '#007bff' : '#fff';
+              btn.style.color = (i === currentPage) ? '#fff' : '#333';
+              btn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)';
+            };
+            btn.addEventListener('click', function() {
+              currentPage = i;
+              render();
+            });
+            pagination.appendChild(btn);
+          }
+        }
+
+        function capitalize(str) {
+          return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function getFilteredData() {
+          return ordersData.filter(order => {
+            const statusMatch = (currentStatus === 'all orders' || order.status.includes(currentStatus));
+            const searchMatch = (
+              order.id.toLowerCase().includes(currentSearch) ||
+              order.customer.toLowerCase().includes(currentSearch) ||
+              order.products.toLowerCase().includes(currentSearch) ||
+              order.date.toLowerCase().includes(currentSearch) ||
+              order.amount.toLowerCase().includes(currentSearch) ||
+              order.status.toLowerCase().includes(currentSearch)
+            );
+            return statusMatch && searchMatch;
+          });
+        }
+
+        function render() {
+          const filtered = getFilteredData();
+          if (currentPage > Math.ceil(filtered.length / rowsPerPage)) currentPage = 1;
+          renderTablePage(currentPage, filtered);
+          renderPagination(filtered);
+        }
+
+        searchInput.addEventListener('input', function() {
+          currentSearch = this.value.toLowerCase();
+          currentPage = 1;
+          render();
+        });
+
+        filterSelect.addEventListener('change', function() {
+          currentStatus = this.value.toLowerCase();
+          currentPage = 1;
+          render();
+        });
+
+        // Initial render
+        render();
+      });
+    </script>
+  </body>
+</html>

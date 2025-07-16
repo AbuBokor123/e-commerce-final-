@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard - ShoeHub</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <div class="container">
+      <div class="navbar">
+        <div class="logo">
+          <a href="index.html"
+            ><img src="images/logo-main.png" width="125px"
+          /></a>
+        </div>
+        <nav>
+          <ul id="MenuItems">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="account.html">Account</a></li>
+          </ul>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 20px">
+          <a href="wishlist.html" style="position: relative;">
+            <img src="images/w.jpg" width="25px" height="25px" />
+            <span id="wishlist-count" style="position: absolute; top: -8px; right: -8px; background: #ff523b; color: #fff; border-radius: 50%; padding: 2px 7px; font-size: 12px; font-weight: bold; display: none;">0</span>
+          </a>
+          <a href="cart.html">
+            <img src="images/cart.png" width="25px" height="25px" />
+          </a>
+        </div>
+        <img src="images/menu.png" class="menu-icon" onClick="menutoggle()" />
+      </div>
+    </div>
+
+    <div class="main-content-wrapper">
+      <!-- Dashboard Section -->
+      <div class="dashboard-container">
+        <div class="dashboard-sidebar">
+          <div class="user-profile">
+            <div class="profile-image-container">
+              <img
+                src="images/user-1.png"
+                alt="User Profile"
+                class="profile-image"
+              />
+              <button class="change-profile-btn">
+                <i class="fa fa-camera"></i>
+              </button>
+            </div>
+            <h3>Jannatul Ferdous Kely</h3>
+            <p>JannatulFerdous@example.com</p>
+            <div class="profile-status">
+              <span class="status-badge">Premium Member</span>
+            </div>
+          </div>
+          <ul class="dashboard-menu">
+            <li class="active">
+              <a href="dashboard.html"><i class="fa fa-dashboard"></i> Overview</a>
+            </li>
+            <li>
+              <a href="order.html"><i class="fa fa-shopping-bag"></i> My Orders</a>
+            </li>
+            <li>
+              <a href="wishlist.html"><i class="fa fa-heart"></i> Wishlist</a>
+            </li>
+            <li>
+              <a href="payment-methods.html"><i class="fa fa-credit-card"></i> Payment Methods</a>
+            </li>
+            <li>
+              <a href="activity-log.html"><i class="fa fa-history"></i> Activity Log</a>
+            </li>
+            <li>
+              <a href="account-settings.html"><i class="fa fa-cog"></i> Account Settings</a>
+            </li>
+            <li class="logout-item">
+              <a href="index.html" onclick="logout()"><i class="fa fa-sign-out"></i> Logout</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="dashboard-content">
+          <!-- Overview Tab -->
+          <div class="dashboard-tab active" id="overview">
+            <h2>Dashboard Overview</h2>
+            <div class="dashboard-stats">
+              <div class="stat-card" onclick="window.location.href='order.html'" style="cursor: pointer;">
+                <i class="fa fa-shopping-bag"></i>
+                <div class="stat-info">
+                  <h3>Total Orders</h3>
+                  <p>12</p>
+                  <span class="stat-trend up">+2 this month</span>
+                </div>
+              </div>
+              <div class="stat-card" onclick="window.location.href='wishlist.html'" style="cursor: pointer;">
+                <i class="fa fa-heart"></i>
+                <div class="stat-info">
+                  <h3>Wishlist Items</h3>
+                  <p>8</p>
+                  <span class="stat-trend up">+3 this week</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <i class="fa fa-money"></i>
+                <div class="stat-info">
+                  <h3>Total Spent</h3>
+                  <p>$1,250.00</p>
+                  <span class="stat-trend up">+$250 this month</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="map-container">
+              <div id="storeMap"></div>
+            </div>
+            <div class="map-info">
+              <h3>Sahi Eid Gah Store</h3>
+              <p>
+                <i class="fa fa-map-marker"></i> Sahi Eid Gah, Sylhet, Bangladesh
+              </p>
+              <p><i class="fa fa-phone"></i> +880 1234 567890</p>
+              <p><i class="fa fa-clock-o"></i> Open 9:00 AM - 9:00 PM</p>
+            </div>
+
+           
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="footer-col-1">
+            <h3>Download Our App</h3>
+            <p>Download App for Android and ios mobile phone.</p>
+            <div class="app-logo">
+              <img src="images/play-store.png" alt />
+              <img src="images/app-store.png" alt />
+            </div>
+          </div>
+          <div class="footer-col-2">
+            <img src="images/logo-main.png" />
+            <p>
+              Our Purpose Is To Sustainably Make the Pleasure and Benefits of
+              Sports Accessible to the Many.
+            </p>
+          </div>
+          <div class="footer-col-3">
+            <h3>Useful Links</h3>
+            <ul>
+              <li>Coupons</li>
+              <li>Blog Post</li>
+              <li>Return Policy</li>
+              <li>Join Affiliate</li>
+            </ul>
+          </div>
+          <div class="footer-col-4">
+            <h3>Follow us</h3>
+            <ul>
+              <li>Facebook</li>
+              <li>Twitter</li>
+              <li>Instagram</li>
+              <li>Youtube</li>
+            </ul>
+          </div>
+        </div>
+
+        <hr />
+        <!--horizontal line-->
+        <p class="copyright">Copyright 2025</p>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="dashboard.js"></script>
+    <script>
+      // Toggle Menu
+      var MenuItems = document.getElementById("MenuItems");
+      MenuItems.style.maxHeight = "0px";
+      function menutoggle() {
+        if (MenuItems.style.maxHeight == "0px") {
+          MenuItems.style.maxHeight = "200px";
+        } else {
+          MenuItems.style.maxHeight = "0px";
+        }
+      }
+
+      // Logout function
+      function logout() {
+        // Clear any stored user data
+        localStorage.removeItem('user');
+        sessionStorage.removeItem('user');
+        // Redirect to home page
+        window.location.href = 'index.html';
+      }
+
+      // Dashboard Tab Navigation
+      document.querySelectorAll(".dashboard-menu li").forEach((item) => {
+        item.addEventListener("click", function () {
+          // Remove active class from all tabs
+          document
+            .querySelectorAll(".dashboard-menu li")
+            .forEach((i) => i.classList.remove("active"));
+          document
+            .querySelectorAll(".dashboard-tab")
+            .forEach((tab) => tab.classList.remove("active"));
+
+          // Add active class to clicked tab
+          this.classList.add("active");
+          document.getElementById(this.dataset.tab).classList.add("active");
+        });
+      });
+
+      // Initialize maps
+      document.querySelectorAll(".address-map").forEach((mapElement) => {
+        const map = L.map(mapElement).setView([40.7128, -74.006], 13);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "© OpenStreetMap contributors",
+        }).addTo(map);
+      });
+
+      // Profile image change
+      document
+        .querySelector(".change-profile-btn")
+        .addEventListener("click", function () {
+          const input = document.createElement("input");
+          input.type = "file";
+          input.accept = "image/*";
+          input.click();
+        });
+
+      // Initialize map
+      function initMap() {
+        // Coordinates for Sahi Eid Gah, Sylhet
+        const sylhetCoords = [24.8949, 91.8687];
+
+        // Create map
+        const map = L.map("storeMap").setView(sylhetCoords, 15);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
+
+        // Add marker
+        const marker = L.marker(sylhetCoords).addTo(map);
+
+        // Add popup
+        marker
+          .bindPopup("<b>Sahi Eid Gah Store</b><br>Sylhet, Bangladesh")
+          .openPopup();
+      }
+
+      // Initialize map when page loads
+      document.addEventListener("DOMContentLoaded", initMap);
+    </script>
+  </body>
+</html>
+
+
+
+

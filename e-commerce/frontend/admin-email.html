@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email - ShoeHub Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="sidebar-header">
+          <img src="images/logo-main.png" alt="Logo" class="logo">
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-section">
+            <h3>MAIN MENU</h3>
+            <ul>
+              <li>
+                <a href="admin.html">
+                  <i class="fas fa-th-large"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="admin-products.html">
+                  <i class="fas fa-box"></i>
+                  Products
+                  <span class="badge">+28</span>
+                </a>
+              </li>
+              <li>
+                <a href="admin-orders.html">
+                  <i class="fas fa-shopping-cart"></i>
+                  Orders
+                  <span class="badge">+28</span>
+                </a>
+              </li>
+              
+              <li class="has-submenu" id="admin-submenu">
+                <button class="submenu-btn">
+                  <span>
+                    <i class="fas fa-users"></i>
+                    Users
+                  </span>
+                  <i class="fas fa-chevron-down submenu-toggle"></i>
+                </button>
+                <ul class="submenu">
+                  <li>
+                    <a href="admin-customers.html">
+                      <i class="fas fa-user"></i>
+                      Customers
+                    </a>
+                  </li>
+                  <li>
+                    <a href="admin-admins.html">
+                      <i class="fas fa-user-shield"></i>
+                      Admins
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="#logout">
+                  <i class="fas fa-sign-out-alt"></i>
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="nav-section">
+            <h3>APPS</h3>
+            <ul>
+              <li class="active">
+                <a href="admin-email.html">
+                  <i class="fas fa-envelope"></i>
+                  Email
+                </a>
+              </li>
+              <li>
+                <a href="admin-chat.html">
+                  <i class="fas fa-comments"></i>
+                  Chat
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="admin-main">
+        <header class="admin-header">
+          <div class="header-left">
+            <button id="sidebar-toggle">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+              <i class="fas fa-search"></i>
+              <input type="search" placeholder="Search emails..." />
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="header-actions">
+              <button class="action-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">5</span>
+              </button>
+              <button class="action-btn">
+                <i class="fas fa-envelope"></i>
+                <span class="notification-badge">3</span>
+              </button>
+            </div>
+            <div class="admin-profile">
+              <img src="images/adminicon.png" alt="Admin Avatar" />
+              <span>Kushal Panthadas</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </header>
+
+        <div class="admin-content">
+          <div class="content-header">
+            <h1>Email Management</h1>
+            <button class="compose-email-btn" id="composeEmailBtn">
+              <i class="fas fa-plus"></i> Compose Email
+            </button>
+          </div>
+
+          <!-- Email Interface -->
+          <div class="email-interface">
+            <div class="email-sidebar">
+              <div class="email-folders">
+                <button class="folder-btn active" id="inboxBtn">
+                  <i class="fas fa-inbox"></i>
+                  Inbox
+                  <span class="badge">12</span>
+                </button>
+                <button class="folder-btn" id="sentBtn">
+                  <i class="fas fa-paper-plane"></i>
+                  Sent
+                </button>
+                <button class="folder-btn" id="trashBtn">
+                  <i class="fas fa-trash"></i>
+                  Trash
+                </button>
+              </div>
+            </div>
+            <div class="email-list" id="inboxList">
+              <div class="email-item unread">
+                <div class="email-checkbox">
+                  <input type="checkbox">
+                </div>
+                <div class="email-star">
+                  <i class="far fa-star"></i>
+                </div>
+                <div class="email-sender">John Doe</div>
+                <div class="email-subject">Order Confirmation #12345</div>
+                <div class="email-preview">Thank you for your order. Your order has been confirmed...</div>
+                <div class="email-time">10:30 AM</div>
+              </div>
+              <!-- Add more email items here -->
+            </div>
+            <div class="email-list" id="sentList" style="display:none;">
+              <div class="email-item">
+                <div class="email-sender"><strong>To:</strong> sarah@email.com</div>
+                <div class="email-subject">Promo: 20% Off All Shoes!</div>
+                <div class="email-preview">Hi Sarah, enjoy 20% off on all shoes this weekend only...</div>
+                <div class="email-time">Yesterday</div>
+              </div>
+              <div class="email-item">
+                <div class="email-sender"><strong>To:</strong> mike@email.com</div>
+                <div class="email-subject">Order Shipped</div>
+                <div class="email-preview">Hi Mike, your order #12346 has been shipped...</div>
+                <div class="email-time">2 days ago</div>
+              </div>
+              <div class="email-item">
+                <div class="email-sender"><strong>To:</strong> all-customers@email.com</div>
+                <div class="email-subject">Spring Sale Starts Now!</div>
+                <div class="email-preview">Dear customer, our Spring Sale is live. Shop now and save...</div>
+                <div class="email-time">Last week</div>
+              </div>
+            </div>
+            <div class="email-list" id="trashList" style="display:none;">
+              <div class="email-item">
+                <div class="email-sender"><strong>From:</strong> support@shoehub.com</div>
+                <div class="email-subject">Order Cancelled</div>
+                <div class="email-preview">Your order #12347 has been cancelled as per your request...</div>
+                <div class="email-time">Today</div>
+              </div>
+              <div class="email-item">
+                <div class="email-sender"><strong>To:</strong> jane@email.com</div>
+                <div class="email-subject">Promo: Free Shipping</div>
+                <div class="email-preview">Hi Jane, enjoy free shipping on your next order...</div>
+                <div class="email-time">Yesterday</div>
+              </div>
+              <div class="email-item">
+                <div class="email-sender"><strong>From:</strong> admin@shoehub.com</div>
+                <div class="email-subject">Account Deactivation</div>
+                <div class="email-preview">Your account has been deactivated due to inactivity...</div>
+                <div class="email-time">Last week</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Compose Email Modal -->
+    <div class="product-modal" id="composeEmailModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Compose Email</h2>
+          <button class="modal-close" id="closeComposeEmailModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="composeEmailForm">
+            <div class="form-group">
+              <label for="emailTo">To</label>
+              <input type="email" id="emailTo" name="emailTo" required placeholder="Recipient's email">
+            </div>
+            <div class="form-group">
+              <label for="emailSubject">Subject</label>
+              <input type="text" id="emailSubject" name="emailSubject" required placeholder="Subject">
+            </div>
+            <div class="form-group">
+              <label for="emailMessage">Message</label>
+              <textarea id="emailMessage" name="emailMessage" required placeholder="Write your message..." style="min-height: 120px;"></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn cancel" id="cancelComposeEmail">Cancel</button>
+          <button class="modal-btn save" id="sendEmail">Send Email</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+      // Compose Email Modal logic
+      const composeEmailBtn = document.getElementById('composeEmailBtn');
+      const composeEmailModal = document.getElementById('composeEmailModal');
+      const closeComposeEmailModal = document.getElementById('closeComposeEmailModal');
+      const cancelComposeEmail = document.getElementById('cancelComposeEmail');
+      if (composeEmailBtn && composeEmailModal) {
+        composeEmailBtn.addEventListener('click', function() {
+          composeEmailModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      }
+      if (closeComposeEmailModal && composeEmailModal) {
+        closeComposeEmailModal.addEventListener('click', function() {
+          composeEmailModal.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      }
+      if (cancelComposeEmail && composeEmailModal) {
+        cancelComposeEmail.addEventListener('click', function() {
+          composeEmailModal.classList.remove('active');
+          document.body.style.overflow = '';
+        });
+      }
+      // Sent/Inbox toggle logic
+      const inboxBtn = document.getElementById('inboxBtn');
+      const sentBtn = document.getElementById('sentBtn');
+      const trashBtn = document.getElementById('trashBtn');
+      const inboxList = document.getElementById('inboxList');
+      const sentList = document.getElementById('sentList');
+      const trashList = document.getElementById('trashList');
+      if (inboxBtn && sentBtn && trashBtn && inboxList && sentList && trashList) {
+        inboxBtn.addEventListener('click', function() {
+          inboxBtn.classList.add('active');
+          sentBtn.classList.remove('active');
+          trashBtn.classList.remove('active');
+          inboxList.style.display = '';
+          sentList.style.display = 'none';
+          trashList.style.display = 'none';
+        });
+        sentBtn.addEventListener('click', function() {
+          sentBtn.classList.add('active');
+          inboxBtn.classList.remove('active');
+          trashBtn.classList.remove('active');
+          sentList.style.display = '';
+          inboxList.style.display = 'none';
+          trashList.style.display = 'none';
+        });
+        trashBtn.addEventListener('click', function() {
+          trashBtn.classList.add('active');
+          inboxBtn.classList.remove('active');
+          sentBtn.classList.remove('active');
+          trashList.style.display = '';
+          inboxList.style.display = 'none';
+          sentList.style.display = 'none';
+        });
+      }
+    </script>
+  </body>
+</html> 

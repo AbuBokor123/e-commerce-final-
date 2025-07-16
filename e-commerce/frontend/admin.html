@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - ShoeHub</title>
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet">
+    <link rel="stylesheet" href="admin.css" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    
+    <div class="admin-container">
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="sidebar-header">
+          <img src="images/logo-main.png" alt="Logo" class="logo">
+        </div>
+        <nav class="sidebar-nav">
+          <div class="nav-section">
+            <h3>MAIN MENU</h3>
+            <ul>
+              <li class="active">
+                <a href="#dashboard">
+                  <i class="fas fa-th-large"></i>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="admin-products.html">
+                  <i class="fas fa-box"></i>
+                  Products
+                  <span class="badge">+28</span>
+                </a>
+              </li>
+              <li>
+                <a href="admin-orders.html">
+                  <i class="fas fa-shopping-cart"></i>
+                  Orders
+                  <span class="badge">+28</span>
+                </a>
+              </li>
+              <li>
+                <a href="admin-analytics.html">
+                  <i class="fas fa-chart-line"></i>
+                  Analytics
+                </a>
+              </li>
+              <li>
+                <!-- <a href="admin-revenue.html">
+                  <i class="fas fa-dollar-sign"></i>
+                  Revenue
+                </a> -->
+             
+              </li>
+              <li class="has-submenu" id="admin-submenu">
+                <button class="submenu-btn">
+                  <span>
+                    <i class="fas fa-users"></i>
+                    Users
+                  </span>
+                  <i class="fas fa-chevron-down submenu-toggle"></i>
+                </button>
+                <ul class="submenu">
+                  <li>
+                    <a href="admin-customers.html">
+                      <i class="fas fa-user"></i>
+                      Customers
+                    </a>
+                  </li>
+                  <li>
+                    <a href="admin-admins.html">
+                      <i class="fas fa-user-shield"></i>
+                      Admins
+                    </a>
+                  </li>
+                </ul>
+                <li >
+                 <a href="#" id="profileLogoutButton" style="display: block; padding: 12px 20px; color: #e74c3c; text-decoration: none;">Logout</a>
+              </li>
+              </li>
+            </ul>
+     
+          </div>
+
+          <div class="nav-section">
+            <h3>APPS</h3>
+            <ul>
+              <li>
+                <a href="admin-email.html">
+                  <i class="fas fa-envelope"></i>
+                  Email
+                </a>
+              </li>
+              <li>
+                <a href="admin-chat.html">
+                  <i class="fas fa-comments"></i>
+                  Chat
+                </a>
+              </li>
+
+            </ul>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="admin-main">
+        <header class="admin-header">
+          <div class="header-left">
+            <button id="sidebar-toggle">
+              <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+              <i class="fas fa-search"></i>
+              <input type="search" placeholder="Search products..." />
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="header-actions">
+              <button class="action-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">5</span>
+              </button>
+              <button class="action-btn">
+                <i class="fas fa-envelope"></i>
+                <span class="notification-badge">3</span>
+              </button>
+            </div>
+            <div class="admin-profile" id="adminProfile">
+              <img src="images/adminicon.png" alt="Admin Avatar" />
+              <span>Kushal Panthadas</span>
+              <i class="fas fa-chevron-down"></i>
+              <div class="profile-dropdown" id="profileDropdown" style="display: none; position: absolute; top: 60px; right: 30px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.12); border-radius: 8px; min-width: 160px; z-index: 2000;">
+                <a href="#profile" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">Profile</a>
+                <a href="#settings" style="display: block; padding: 12px 20px; color: #333; text-decoration: none;">Settings</a>
+                <a href="#logout" style="display: block; padding: 12px 20px; color: #e74c3c; text-decoration: none;">Logout</a>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="admin-content">
+          <!-- Stats Cards -->
+          <div class="stats-grid">
+            <a href="admin-products.html" class="stat-card products">
+              <div class="stat-icon">
+                <i class="fas fa-box"></i>
+              </div>
+              <div class="stat-info">
+                <h3>Products</h3>
+                <div class="stat-details">
+                  <p class="stat-number">+28</p>
+                  <span class="stat-change positive">+16.24%</span>
+                </div>
+              </div>
+            </a>
+            <a href="admin-customers.html" class="stat-card users">
+              <div class="stat-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-info">
+                <h3>New Users</h3>
+                <div class="stat-details">
+                  <p class="stat-number">11,238</p>
+                  <span class="stat-change positive">+3.48%</span>
+                </div>
+              </div>
+            </a>
+            <a href="admin-orders.html" class="stat-card orders">
+              <div class="stat-icon">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <div class="stat-info">
+                <h3>New Orders</h3>
+                <div class="stat-details">
+                  <p class="stat-number">4,658</p>
+                  <span class="stat-change negative">-2.34%</span>
+                </div>
+              </div>
+            </a>
+            <a href="admin-revenue.html" class="stat-card revenue">
+              <div class="stat-icon">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+              <div class="stat-info">
+                <h3>Total Profit</h3>
+                <div class="stat-details">
+                  <p class="stat-number">$5.6M</p>
+                  <span class="stat-change positive">+10.23%</span>
+                </div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Add New Admin Section -->
+          <!-- <div class="add-admin-section>
+            <h2>Add New Admin</h2>
+            <form id="addAdminForm">
+              <input type="text" id="adminName" placeholder="Name" required>
+              <input type="email" id="adminEmail" placeholder="Email" required>
+              <input type="password" id="adminPassword" placeholder="Password" required>
+              <button type="submit">Add Admin</button>
+            </form>
+            <div id="addAdminMessage"></div>
+          </div> -->
+
+          <!-- Charts Section -->
+          <div class="charts-section">
+            <div class="chart-container sales-chart">
+              <div class="chart-header">
+                <h2>Products Sales</h2>
+                <div class="chart-actions">
+                  <button class="refresh-btn">
+                    <i class="fas fa-sync-alt"></i>
+                  </button>
+                  
+                </div>
+              </div>
+              <canvas id="salesChart"></canvas>
+            </div>
+
+            <div class="chart-container buyers-list">
+              <div class="chart-header">
+                <h2>Recent Buyers</h2>
+                <div class="chart-actions">
+                  <button class="refresh-btn">
+                    <i class="fas fa-sync-alt"></i>
+                  </button>
+                
+                </div>
+              </div>
+              <div class="buyers-table"></div>
+            </div>
+          </div>
+
+          <!-- Recent Orders -->
+          <div class="recent-orders">
+            <div class="section-header">
+              <h2>Recent Orders</h2>
+              <a href="admin-orders.html">view all</a>
+            </div>
+            <div class="orders-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Product</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('access_token');
+    const userRole = localStorage.getItem('user_role'); // Add this line
+    const userName = localStorage.getItem('user_name');
+    
+    // Check both token and role
+    if (!token || userRole !== 'admin') {
+        alert('Access Denied: Only administrators can access this page');
+        window.location.href = 'index.html'; // Redirect to main page
+        return;
+    }
+    
+    // Update admin name in header
+    const adminNameElement = document.querySelector('.admin-profile span');
+    if (adminNameElement && userName) {
+        adminNameElement.textContent = userName;
+    }
+
+    // Add logout event listeners
+    const profileLogoutButton = document.getElementById('profileLogoutButton');
+    const profileDropdownLogout = document.querySelector('#profileDropdown a[href="#logout"]');
+
+    if (profileLogoutButton) {
+        profileLogoutButton.addEventListener('click', async function(e) {
+            e.preventDefault();
+            await logoutFromServer();
+        });
+    }
+
+    if (profileDropdownLogout) {
+        profileDropdownLogout.addEventListener('click', async function(e) {
+            e.preventDefault();
+            await logoutFromServer();
+        });
+    }
+});
+
+async function logoutFromServer() {
+    try {
+        const token = localStorage.getItem('access_token');
+        const refreshToken = localStorage.getItem('refresh_token');
+
+        if (token) {
+            const response = await fetch('http://localhost:8000/api/auth/logout/', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    refresh_token: refreshToken
+                })
+            });
+
+            if (!response.ok) {
+                console.error('Logout failed:', await response.text());
+            }
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+    } finally {
+        // Clear all localStorage items
+        localStorage.clear();
+        // Redirect to login page
+        window.location.href = 'account.html';
+    }
+}
+
+// Toggle profile dropdown
+document.querySelector('.admin-profile').addEventListener('click', function(e) {
+    const dropdown = document.getElementById('profileDropdown');
+    if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    }
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    const profile = document.querySelector('.admin-profile');
+    const dropdown = document.getElementById('profileDropdown');
+    if (!profile.contains(e.target) && dropdown) {
+        dropdown.style.display = 'none';
+    }
+});
+
+const addAdminForm = document.getElementById('addAdminForm');
+if (addAdminForm) {
+  addAdminForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const name = document.getElementById('adminName').value;
+    const email = document.getElementById('adminEmail').value;
+    const password = document.getElementById('adminPassword').value;
+    const token = localStorage.getItem('access_token');
+    const messageDiv = document.getElementById('addAdminMessage');
+
+    try {
+        const response = await fetch('http://localhost:8000/api/admin/create/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, email, password })
+        });
+        if (response.ok) {
+            messageDiv.textContent = 'Admin added successfully!';
+            messageDiv.style.color = 'green';
+            document.getElementById('addAdminForm').reset();
+        } else {
+            const data = await response.json();
+            messageDiv.textContent = data.detail || 'Failed to add admin.';
+            messageDiv.style.color = 'red';
+        }
+    } catch (err) {
+        messageDiv.textContent = 'Error adding admin.';
+        messageDiv.style.color = 'red';
+    }
+  }); // <-- This closes the addEventListener
+} // <-- This closes the if (addAdminForm)
+
+// Fetch stats for dashboard cards
+async function loadDashboardStats() {
+  try {
+    // You need to create an API endpoint that returns these stats!
+    const token = localStorage.getItem('access_token');
+    const res = await fetch('http://localhost:8000/api/admin-dashboard-stats/', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const stats = await res.json();
+
+    document.querySelector('.stat-card.products .stat-number').textContent = stats.products;
+    document.querySelector('.stat-card.users .stat-number').textContent = stats.users;
+    document.querySelector('.stat-card.orders .stat-number').textContent = stats.orders;
+    document.querySelector('.stat-card.revenue .stat-number').textContent = `$${stats.revenue}`;
+  } catch (err) {
+    console.error('Failed to load dashboard stats', err);
+  }
+}
+document.addEventListener('DOMContentLoaded', loadDashboardStats);
+
+async function loadRecentBuyers() {
+  try {
+    const token = localStorage.getItem('access_token');
+    const res = await fetch('http://localhost:8000/api/recent-buyers/', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const buyers = await res.json();
+    const buyersTable = document.querySelector('.buyers-table');
+    if (Array.isArray(buyers)) {
+      buyersTable.innerHTML = buyers.map(buyer => `
+        <div class="buyer-row">
+          <div class="buyer-info">
+            <img src="${buyer.avatar || 'images/avatar1.png'}" alt="Buyer Avatar">
+            <div class="buyer-details">
+              <h4>${buyer.name}</h4>
+              <span class="buyer-tag">${buyer.category}</span>
+            </div>
+          </div>
+          <div class="buyer-amount">$${buyer.amount}</div>
+        </div>
+      `).join('');
+    } else {
+      buyersTable.innerHTML = '<div class="error">Failed to load buyers.</div>';
+      console.error('API error:', buyers);
+    }
+  } catch (err) {
+    console.error('Failed to load buyers', err);
+  }
+}
+document.addEventListener('DOMContentLoaded', loadRecentBuyers);
+
+async function loadRecentOrders() {
+  try {
+    const token = localStorage.getItem('access_token');
+    const res = await fetch('http://localhost:8000/api/recent-orders/', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const orders = await res.json();
+    const tbody = document.querySelector('.orders-table tbody');
+    if (Array.isArray(orders)) {
+      tbody.innerHTML = orders.map(order => `
+        <tr>
+          <td>#ORD-${order.id}</td>
+          <td>${order.customer}</td>
+          <td>${order.product}</td>
+          <td>${order.date}</td>
+          <td>$${order.amount}</td>
+          <td><span class="status ${order.status.toLowerCase()}">${order.status}</span></td>
+        </tr>
+      `).join('');
+    } else {
+      tbody.innerHTML = '<tr><td colspan="6">Failed to load orders.</td></tr>';
+      console.error('API error:', orders);
+    }
+  } catch (err) {
+    console.error('Failed to load orders', err);
+  }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  loadRecentOrders();
+});
+
+async function loadSalesChart() {
+  const token = localStorage.getItem('access_token');
+  const res = await fetch('http://localhost:8000/api/sales-chart-data/', {
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+  const chartData = await res.json();
+  const ctx = document.getElementById('salesChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: chartData.labels,
+      datasets: [{
+        label: 'Sales',
+        data: chartData.data,
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        fill: true,
+        tension: 0.4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true }
+      }
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', loadSalesChart);
+</script>
+ </body>
+</html>
